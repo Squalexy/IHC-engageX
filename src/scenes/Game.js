@@ -103,5 +103,7 @@ export default class Game extends Phaser.Scene {
 
     update() {
 
+        // nothing for now
+
     }
 }
