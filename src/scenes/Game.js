@@ -98,7 +98,15 @@ export default class Game extends Phaser.Scene {
             }
         })
 
+        this.input.keyboard.on('keydown-Q', function (event) {
+            if (vision.scale == 0.4) vision.scale = 100
+            else vision.scale = 0.4
+
+        })
+    
+
     }
+
 
 
     update() {
