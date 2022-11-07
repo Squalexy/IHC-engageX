@@ -13,6 +13,7 @@ export default class Game extends Phaser.Scene {
         this.load.tilemapTiledJSON('map', 'src/assets/tiles/map1.json')
         this.load.image('vision', 'src/assets/particles/fog.png')
         this.load.atlas('elf', 'src/assets/sprites/elf/elf.png', 'src/assets/sprites/elf/elf_atlas.json')
+        this.load.animation('elf_animation', 'src/assets/sprites/elf/elf_anim.json')
 
     }
 
@@ -48,6 +49,8 @@ export default class Game extends Phaser.Scene {
 
         const player = new Phaser.Physics.Matter.Sprite(this.matter.world, 50, 50, 'elf', 'elf_m_walk_1')
         this.add.existing(player)
+        player.anims.play('elf_idle', true)
+
         
         // field of view effect
         const vision = this.make.image({
@@ -116,8 +119,6 @@ export default class Game extends Phaser.Scene {
 
 
     update() {
-
         // nothing for now
-
     }
 }
