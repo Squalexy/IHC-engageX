@@ -1,19 +1,20 @@
 import Phaser from '../lib/phaser.js'
+import Player from './Player.js'
 
 export default class Game extends Phaser.Scene {
 
     constructor() {
         super('game')
     }
-
+ 
     preload() {
 
         this.load.image('bunny', 'src/assets/sprites/bunny2_ready.png')
         this.load.image('tiles', 'src/assets/tiles/desert.png')
         this.load.tilemapTiledJSON('map', 'src/assets/tiles/map1.json')
         this.load.image('vision', 'src/assets/particles/fog.png')
-        this.load.atlas('elf', 'src/assets/sprites/elf/elf.png', 'src/assets/sprites/elf/elf_atlas.json')
-        this.load.animation('elf_animation', 'src/assets/sprites/elf/elf_anim.json')
+
+        Player.preload(this)
 
     }
 
@@ -22,7 +23,6 @@ export default class Game extends Phaser.Scene {
         //this.cameras.main.setZoom(0.7)
 
         // ----------------------------------------------------- TILEMAP CREATION 
-
         
         const map = this.make.tilemap({
             key: 'map'
@@ -47,15 +47,23 @@ export default class Game extends Phaser.Scene {
         // const player = this.add.image(32 + 16, 32 + 16, 'bunny')
 
 
-        const player = new Phaser.Physics.Matter.Sprite(this.matter.world, 50, 50, 'elf', 'elf_m_walk_1')
-        this.add.existing(player)
-        player.anims.play('elf_idle', true)
+        this.player = new Player({scene:this, x:50, y:50, texture:'elf', frame:'elf_m_walk_1'})  
+        this.player.layer = layer
+        this.time.addEvent({delay:1000, loop:true})
 
-        
+
+        this.player.inputKeys = this.input.keyboard.addKeys({
+            up: Phaser.Input.Keyboard.KeyCodes.W,
+            down: Phaser.Input.Keyboard.KeyCodes.S, 
+            left: Phaser.Input.Keyboard.KeyCodes.A,
+            right: Phaser.Input.Keyboard.KeyCodes.D,
+            Q: Phaser.Input.Keyboard.KeyCodes.Q
+        })
+
         // field of view effect
         const vision = this.make.image({
-            x: player.x,
-            y: player.y,
+            x: this.player.x,
+            y: this.player.y,
             key: 'vision',
             add: false
         })
@@ -63,62 +71,13 @@ export default class Game extends Phaser.Scene {
 
         rt.mask = new Phaser.Display.Masks.BitmapMask(this, vision)
         rt.mask.invertAlpha = true
-    
 
-        // ----------------------------------------------------- BUTTONS 
-
-        //  Left
-        this.input.keyboard.on('keydown-A', function (event) {
-            const tile = layer.getTileAtWorldXY(player.x - 32, player.y, true);
-            if (tile.index === 2) player.x -= 0
-            else {
-                player.x -= 32
-                vision.x -= 32
-            }
-        })
-
-        //  Right
-        this.input.keyboard.on('keydown-D', function (event) {
-            const tile = layer.getTileAtWorldXY(player.x + 32, player.y, true)
-            if (tile.index === 2) player.x += 0
-            else {
-                player.x += 32
-                vision.x += 32
-            }
-        })
-
-        //  Up
-        this.input.keyboard.on('keydown-W', function (event) {
-            const tile = layer.getTileAtWorldXY(player.x, player.y - 32, true)
-            if (tile.index === 2) player.y -= 0
-            else {
-                player.y -= 32
-                vision.y -= 32
-            }
-        })
-
-        //  Down
-        this.input.keyboard.on('keydown-S', function (event) {
-            const tile = layer.getTileAtWorldXY(player.x, player.y + 32, true)
-            if (tile.index === 2) player.y += 0
-            else {
-                player.y += 32
-                vision.y += 32
-            }
-        })
-
-        this.input.keyboard.on('keydown-Q', function (event) {
-            if (vision.scale == 0.4) vision.scale = 100
-            else vision.scale = 0.4
-
-        })
-
+        this.player.vision = vision
 
     }
-
-
 
     update() {
-        // nothing for now
+        this.player.update()
     }
+
 }
