@@ -9,4 +9,20 @@ export default new Phaser.Game({
     parent: 'main',
     backgroundColor: '#1a1a2d',
     pixelArt: true,
+    physics: {
+        default: 'matter',
+        matter: {
+            debug: true,
+            gravity: {y:0},
+        }
+    },
+    plugins: {
+        scene: [
+            {
+                plugin: PhaserMatterCollisionPlugin,
+                key: 'matterCollision',
+                mapping: 'matterCollision'
+            }
+        ]
+    }
 })

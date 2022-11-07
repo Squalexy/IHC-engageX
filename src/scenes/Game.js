@@ -12,6 +12,7 @@ export default class Game extends Phaser.Scene {
         this.load.image('tiles', 'src/assets/tiles/desert.png')
         this.load.tilemapTiledJSON('map', 'src/assets/tiles/map1.json')
         this.load.image('vision', 'src/assets/particles/fog.png')
+        this.load.atlas('elf', 'src/assets/sprites/elf/elf.png', 'src/assets/sprites/elf/elf_atlas.json')
 
     }
 
@@ -21,6 +22,7 @@ export default class Game extends Phaser.Scene {
 
         // ----------------------------------------------------- TILEMAP CREATION 
 
+        
         const map = this.make.tilemap({
             key: 'map'
         }, 32, 32)
@@ -41,9 +43,13 @@ export default class Game extends Phaser.Scene {
 
         // ----------------------------------------------------- SPRITES CREATION 
 
-        const player = this.add.image(32 + 16, 32 + 16, 'bunny')
-        player.setScale(0.2)
+        // const player = this.add.image(32 + 16, 32 + 16, 'bunny')
 
+
+        const player = new Phaser.Physics.Matter.Sprite(this.matter.world, 50, 50, 'elf', 'elf_m_walk_1')
+        this.add.existing(player)
+        
+        // field of view effect
         const vision = this.make.image({
             x: player.x,
             y: player.y,
@@ -54,7 +60,7 @@ export default class Game extends Phaser.Scene {
 
         rt.mask = new Phaser.Display.Masks.BitmapMask(this, vision)
         rt.mask.invertAlpha = true
-
+    
 
         // ----------------------------------------------------- BUTTONS 
 
@@ -103,7 +109,7 @@ export default class Game extends Phaser.Scene {
             else vision.scale = 0.4
 
         })
-    
+
 
     }
 
