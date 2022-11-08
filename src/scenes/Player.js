@@ -33,12 +33,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(scene) {
 
+        const tileUp = this.layer.getTileAtWorldXY(this.x, this.y - 32, true);
+        const tileDown = this.layer.getTileAtWorldXY(this.x, this.y + 32, true);
+        const tileLeft = this.layer.getTileAtWorldXY(this.x - 32, this.y, true);
+        const tileRight = this.layer.getTileAtWorldXY(this.x + 32, this.y, true);
+
 
         this.anims.play('elf_idle', true)
 
         // Left
         if (this.inputKeys.left.isDown) {
-            if (!this.pressedLeft) {
+
+            if (!this.pressedLeft && tileLeft.index !== 5) {
                 this.x -= 32
                 this.vision.x -= 32
                 this.pressedLeft = true
@@ -47,7 +53,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Right
         if (this.inputKeys.right.isDown) {
-            if (!this.pressedRight) {
+            if (!this.pressedRight && tileRight.index !== 5) {
                 this.x += 32
                 this.vision.x += 32
                 this.pressedRight = true
@@ -56,7 +62,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         //  Down
         if (this.inputKeys.down.isDown) {
-            if (!this.pressedDown) {
+            if (!this.pressedDown && tileDown.index !== 5) {
                 this.y += 32
                 this.vision.y += 32
                 this.pressedDown = true
@@ -64,7 +70,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         //  Up
-        if (this.inputKeys.up.isDown) {
+        if (this.inputKeys.up.isDown && tileUp.index !== 5) {
             if (!this.pressedUp) {
                 this.y -= 32
                 this.vision.y -= 32

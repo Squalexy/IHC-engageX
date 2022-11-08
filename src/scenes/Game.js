@@ -27,21 +27,17 @@ export default class Game extends Phaser.Scene {
         })
         const tileset = map.addTilesetImage('desert', 'tiles', 32, 32)
         const layer = map.createLayer('toplayer', tileset, 0, 0)
-        const layerWall = map.createLayer('walllayer', tileset, 0, 0)
 
         // ----------------------------------------------------- SPRITES CREATION 
 
         this.player = new Player({scene:this, x:32+16, y:32+16, texture:'elf', frame:'elf_m_walk_1'})  
-        
+        this.player.layer = layer
+
         // ----------------------------------------------------- ZOOM & FOLLOW
 
         this.cameras.main.setZoom(1.5)
-        //this.cameras.main.setSize(800, 600);
+        this.cameras.main.setSize(800, 600);
         this.cameras.main.startFollow(this.player)
-
-        // ----------------------------------------------------- COLLISION EFFECTS
-
-        layerWall.setCollisionByProperty({collides: true})
 
         // ----------------------------------------------------- KEYBINDS
 
@@ -55,8 +51,8 @@ export default class Game extends Phaser.Scene {
 
         // ----------------------------------------------------- DARK EFFECT 
         
-        const width = this.scale.width
-        const height = this.scale.height
+        const width = this.scale.width * 2
+        const height = this.scale.height * 2
         const rt = this.make.renderTexture({
             width,
             height
@@ -77,16 +73,6 @@ export default class Game extends Phaser.Scene {
         rt.mask.invertAlpha = true
 
         this.player.vision = vision
-
-        // ----------------------------------------------------- DEBUGGING
-
-        // ----- walls
-        const debugGraphics = this.add.graphics().setAlpha(0.7)
-        layerWall.renderDebug(debugGraphics, {
-            tileColor: null,
-            collidingTileColor: new Phaser.Display.Color(243, 234, 48, 255),
-            faceColor: new Phaser.Display.Color(40, 39, 37, 255)
-        })
 
     }
 
