@@ -11,8 +11,8 @@ export default new Phaser.Game({
     pixelArt: true,
     physics: {
         default: 'arcade',
-        matter: {
-            debug: true,
+        arcade: {
+            debug: true
         },
     },
 })

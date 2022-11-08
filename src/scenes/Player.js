@@ -13,7 +13,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this)
         this.scene.add.existing(this)
 
-    }   
+    }
 
 
     static preload(scene) {
@@ -32,6 +32,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
 
     update(scene) {
+
 
         this.anims.play('elf_idle', true)
 
@@ -55,7 +56,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         //  Down
         if (this.inputKeys.down.isDown) {
-
             if (!this.pressedDown) {
                 this.y += 32
                 this.vision.y += 32

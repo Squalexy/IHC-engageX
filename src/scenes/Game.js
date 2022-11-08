@@ -20,39 +20,27 @@ export default class Game extends Phaser.Scene {
 
     create() {
 
-        this.cameras.main.setZoom(1)
-
         // ----------------------------------------------------- TILEMAP CREATION 
         
         const map = this.make.tilemap({
             key: 'map'
         })
         const tileset = map.addTilesetImage('desert', 'tiles', 32, 32)
-
         const layer = map.createLayer('toplayer', tileset, 0, 0)
         const layerWall = map.createLayer('walllayer', tileset, 0, 0)
-
-        // ----------------------------------------------------- DARK EFFECT pt1
-
-        const width = this.scale.width
-        const height = this.scale.height
-        const rt = this.make.renderTexture({
-            width,
-            height
-        }, true)
-        rt.fill(0x000000, 1)
-        rt.draw(layer)
-        rt.setTint(0x0a2948)
 
         // ----------------------------------------------------- SPRITES CREATION 
 
         this.player = new Player({scene:this, x:32+16, y:32+16, texture:'elf', frame:'elf_m_walk_1'})  
-
+        
+        // ----------------------------------------------------- ZOOM & FOLLOW
+        this.cameras.main.setZoom(1)
+        this.cameras.main.setSize(800, 600);
+        this.cameras.main.startFollow(this.player)
 
         // ----------------------------------------------------- COLLISION EFFECTS
 
-        this.physics.add.collider(this.player, layerWall)
-        layerWall.setCollision(2)
+        layerWall.setCollisionByProperty({collides: true})
 
         // ----------------------------------------------------- KEYBINDS
 
@@ -64,8 +52,18 @@ export default class Game extends Phaser.Scene {
             Q: Phaser.Input.Keyboard.KeyCodes.Q
         })
 
-        // ----------------------------------------------------- DARK EFFECT pt2
+        // ----------------------------------------------------- DARK EFFECT 
         
+        const width = this.scale.width
+        const height = this.scale.height
+        const rt = this.make.renderTexture({
+            width,
+            height
+        }, true)
+        rt.fill(0x000000, 1)
+        rt.draw(layer)
+        rt.setTint(0x0a2948)
+
         const vision = this.make.image({
             x: this.player.x,
             y: this.player.y,
@@ -79,10 +77,23 @@ export default class Game extends Phaser.Scene {
 
         this.player.vision = vision
 
+        // ----------------------------------------------------- DEBUGGING
+
+        // ----- walls
+        const debugGraphics = this.add.graphics().setAlpha(0.7)
+        layerWall.renderDebug(debugGraphics, {
+            tileColor: null,
+            collidingTileColor: new Phaser.Display.Color(243, 234, 48, 255),
+            faceColor: new Phaser.Display.Color(40, 39, 37, 255)
+        })
+
     }
 
     update() {
+
         this.player.update()
+
+
     }
 
 }
