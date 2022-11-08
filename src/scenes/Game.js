@@ -34,8 +34,9 @@ export default class Game extends Phaser.Scene {
         this.player = new Player({scene:this, x:32+16, y:32+16, texture:'elf', frame:'elf_m_walk_1'})  
         
         // ----------------------------------------------------- ZOOM & FOLLOW
-        this.cameras.main.setZoom(1)
-        this.cameras.main.setSize(800, 600);
+
+        this.cameras.main.setZoom(1.5)
+        //this.cameras.main.setSize(800, 600);
         this.cameras.main.startFollow(this.player)
 
         // ----------------------------------------------------- COLLISION EFFECTS
@@ -92,7 +93,6 @@ export default class Game extends Phaser.Scene {
     update() {
 
         this.player.update()
-
 
     }
 
