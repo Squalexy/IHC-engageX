@@ -20,17 +20,19 @@ export default class Game extends Phaser.Scene {
 
     create() {
 
-        //this.cameras.main.setZoom(0.7)
+        this.cameras.main.setZoom(1)
 
         // ----------------------------------------------------- TILEMAP CREATION 
         
         const map = this.make.tilemap({
             key: 'map'
-        }, 32, 32)
+        })
         const tileset = map.addTilesetImage('desert', 'tiles', 32, 32)
-        const layer = map.createLayer('toplayer', tileset)
 
-        // ----------------------------------------------------- DARK EFFECT
+        const layer = map.createLayer('toplayer', tileset, 0, 0)
+        const layerWall = map.createLayer('walllayer', tileset, 0, 0)
+
+        // ----------------------------------------------------- DARK EFFECT pt1
 
         const width = this.scale.width
         const height = this.scale.height
@@ -44,13 +46,15 @@ export default class Game extends Phaser.Scene {
 
         // ----------------------------------------------------- SPRITES CREATION 
 
-        // const player = this.add.image(32 + 16, 32 + 16, 'bunny')
+        this.player = new Player({scene:this, x:32+16, y:32+16, texture:'elf', frame:'elf_m_walk_1'})  
 
 
-        this.player = new Player({scene:this, x:50, y:50, texture:'elf', frame:'elf_m_walk_1'})  
-        this.player.layer = layer
-        this.time.addEvent({delay:1000, loop:true})
+        // ----------------------------------------------------- COLLISION EFFECTS
 
+        this.physics.add.collider(this.player, layerWall)
+        layerWall.setCollision(2)
+
+        // ----------------------------------------------------- KEYBINDS
 
         this.player.inputKeys = this.input.keyboard.addKeys({
             up: Phaser.Input.Keyboard.KeyCodes.W,
@@ -60,7 +64,8 @@ export default class Game extends Phaser.Scene {
             Q: Phaser.Input.Keyboard.KeyCodes.Q
         })
 
-        // field of view effect
+        // ----------------------------------------------------- DARK EFFECT pt2
+        
         const vision = this.make.image({
             x: this.player.x,
             y: this.player.y,

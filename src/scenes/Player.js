@@ -1,6 +1,4 @@
-import Game from './Game.js'
-
-export default class Player extends Phaser.Physics.Matter.Sprite {
+export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     constructor(data) {
         let {
@@ -10,9 +8,13 @@ export default class Player extends Phaser.Physics.Matter.Sprite {
             texture,
             frame
         } = data
-        super(scene.matter.world, x, y, texture, frame)
+
+        super(scene, x, y, texture, frame)
+        scene.physics.add.existing(this)
         this.scene.add.existing(this)
-    }
+
+    }   
+
 
     static preload(scene) {
 
@@ -23,6 +25,7 @@ export default class Player extends Phaser.Physics.Matter.Sprite {
 
     create(scene) {
 
+        // field of view range
         this.vision.scale = 0.4
 
     }
@@ -34,30 +37,18 @@ export default class Player extends Phaser.Physics.Matter.Sprite {
 
         // Left
         if (this.inputKeys.left.isDown) {
-
             if (!this.pressedLeft) {
-
-                const tile = this.layer.getTileAtWorldXY(this.x - 32, this.y, true)
-                if (tile.index === 2) this.x += 0
-                else {
-                    this.x -= 32
-                    this.vision.x -= 32
-                }
+                this.x -= 32
+                this.vision.x -= 32
                 this.pressedLeft = true
             }
         }
 
         // Right
         if (this.inputKeys.right.isDown) {
-
             if (!this.pressedRight) {
-
-                const tile = this.layer.getTileAtWorldXY(this.x + 32, this.y, true)
-                if (tile.index === 2) this.x += 0
-                else {
-                    this.x += 32
-                    this.vision.x += 32
-                }
+                this.x += 32
+                this.vision.x += 32
                 this.pressedRight = true
             }
         }
@@ -66,33 +57,22 @@ export default class Player extends Phaser.Physics.Matter.Sprite {
         if (this.inputKeys.down.isDown) {
 
             if (!this.pressedDown) {
-
-                const tile = this.layer.getTileAtWorldXY(this.x, this.y + 32, true)
-                if (tile.index === 2) this.y += 0
-                else {
-                    this.y += 32
-                    this.vision.y += 32
-                }
+                this.y += 32
+                this.vision.y += 32
                 this.pressedDown = true
             }
         }
 
         //  Up
         if (this.inputKeys.up.isDown) {
-
             if (!this.pressedUp) {
-
-                const tile = this.layer.getTileAtWorldXY(this.x, this.y - 32, true)
-                if (tile.index === 2) this.y += 0
-                else {
-                    this.y -= 32
-                    this.vision.y -= 32
-                }
+                this.y -= 32
+                this.vision.y -= 32
                 this.pressedUp = true
             }
         }
 
-        // Q for fog effect
+        // Q for field of view effect
         if (this.inputKeys.Q.isDown) {
             if (!this.pressedQ) {
                 if (this.vision.scale == 0.4) this.vision.scale = 100
