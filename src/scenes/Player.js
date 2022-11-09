@@ -1,3 +1,5 @@
+var healthBar;
+
 export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     constructor(data) {
@@ -20,14 +22,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         scene.load.atlas('elf', 'src/assets/sprites/elf/elf.png', 'src/assets/sprites/elf/elf_atlas.json')
         scene.load.animation('elf_animation', 'src/assets/sprites/elf/elf_anim.json')
-
+        
     }
 
     create(scene) {
 
         // field of view range
         this.vision.scale = 0.4
-
     }
 
 
@@ -92,6 +93,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.inputKeys.down.isUp) this.pressedDown = false
         if (this.inputKeys.left.isUp) this.pressedLeft = false
         if (this.inputKeys.right.isUp) this.pressedRight = false
+
+
 
     }
 
