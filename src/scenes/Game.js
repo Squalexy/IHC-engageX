@@ -1,8 +1,12 @@
 import Phaser from '../lib/phaser.js'
 import Player from './Player.js'
+import CountdownController from './CountdownController.js'
 
 
 export default class Game extends Phaser.Scene {
+
+	/** @type {CountdownController} */
+	countdown
 
     constructor() {
         super('game')
@@ -80,6 +84,13 @@ export default class Game extends Phaser.Scene {
 
         this.player.vision = vision
 
+        // ----------------------------------------------------- Time 
+        const timerLabel = this.add.text(150,-10, '90', { fontSize: 20 }).setOrigin(0.5)
+
+        this.countdown = new CountdownController(this, timerLabel)
+        this.countdown.start(this.handleCountdownFinished.bind(this))
+        
+
         // Player's health bar
         this.player.health = 100;
         this.player.maxHealth = 100;
@@ -101,8 +112,12 @@ export default class Game extends Phaser.Scene {
     }
 
     update() {
-        this.player.health = 50;
-        //this.healthBar.setScale(this.player.health / this.player.maxHealth, 0.5);
+        this.player.update()
+        this.countdown.update(this.player)
+        if(this.player.health == 0){
+            this.handleLifeFinished();
+        }
+
         this.healthBar.displayWidth = this.player.health / this.player.maxHealth * this.healthBarWidth;
         this.healthBar.setX(this.player.x  - (1 - this.player.health / this.player.maxHealth)/2 * this.healthBarWidth);
         this.healthBar.setY(this.player.y + 150);
@@ -114,8 +129,20 @@ export default class Game extends Phaser.Scene {
         this.healthLabel.setY(this.player.y + 140);
 
 
-        this.player.update()
+    }
 
+    handleCountdownFinished()
+	{
+		this.add.text(this.player.x, this.player.y - 180,  'GAME FINISHED!', { fontSize: 30 }).setOrigin(0.5)
+
+        this.scene.pause()
+    }
+
+    handleLifeFinished()
+	{
+		this.add.text(this.player.x, this.player.y - 180,  'YOU DIED!', { fontSize: 30 }).setOrigin(0.5)
+
+        this.scene.pause()
     }
 
 }
