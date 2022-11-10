@@ -21,7 +21,11 @@ export default class Game extends Phaser.Scene {
         this.load.image('vision', 'src/assets/particles/fog.png')
         this.load.image('greenHealthBar', 'src/assets/healthBar/green_health_bar.png');
         this.load.image('redHealthBar', 'src/assets/healthBar/red_health_bar.png');
+        this.load.audio('music', 'src/assets/audio/music1.mp3');
+        this.load.audio('loseGame', 'src/assets/audio/loseGame.wav');
+
         
+
         Player.preload(this)
 
     }
@@ -37,6 +41,7 @@ export default class Game extends Phaser.Scene {
         })
         const tileset = map.addTilesetImage('desert', 'tiles', 32, 32)
         const layer = map.createLayer('toplayer', tileset, 0, 0)
+
 
         // ----------------------------------------------------- SPRITES CREATION 
 
@@ -109,6 +114,12 @@ export default class Game extends Phaser.Scene {
         this.healthLabel = this.add.text(60, 12, 'Health', {fontSize:'20px', fill:'#ffffff'});
         this.healthLabel.fixedToCamera = true;
 
+        
+        //
+        this.music = this.sound.add("music",  { loop: true });
+        //game.sound.setDecodedCallback(music, start, this);
+        this.music.play()
+
     }
 
     update() {
@@ -136,13 +147,23 @@ export default class Game extends Phaser.Scene {
 		this.add.text(this.player.x, this.player.y - 180,  'GAME FINISHED!', { fontSize: 30 }).setOrigin(0.5)
 
         this.scene.pause()
+        
+        this.music.stop()
+        this.loseGame = this.sound.add("loseGame",  { volume:0.4 , loop: false });
+        //game.sound.setDecodedCallback(music, start, this);
+        this.loseGame.play()
     }
 
     handleLifeFinished()
 	{
 		this.add.text(this.player.x, this.player.y - 180,  'YOU DIED!', { fontSize: 30 }).setOrigin(0.5)
 
+        this.music.stop()
+        this.loseGame = this.sound.add("loseGame",  { volume:0.4 , loop: false });
+        //game.sound.setDecodedCallback(music, start, this);
+        this.loseGame.play()
         this.scene.pause()
+
     }
 
 }
