@@ -86,10 +86,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Sow
         if (this.inputKeys.E.isDown) {
             if (!this.pressedE) {
-                for (let i = 0; i < this.scene.tiles.length; i++) {
-                    if (this.scene.tiles[i]["value"].index != 5) {
-                        var pointerTileX = this.scene.map.worldToTileX(this.scene.tiles[i]["x"] + this.x)
-                        var pointerTileY = this.scene.map.worldToTileY(this.scene.tiles[i]["y"] + this.y)
+                for (const element of this.scene.tiles) {
+                    if (element["value"].index != 5) {
+                        let pointerTileX = this.scene.map.worldToTileX(element["x"] + this.x)
+                        let pointerTileY = this.scene.map.worldToTileY(element["y"] + this.y)
                         this.scene.map.putTileAt(4, pointerTileX, pointerTileY)
                         this.health -= 25
                     }
@@ -102,8 +102,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.inputKeys.R.isDown) {
             if (!this.pressedR) {
                 if (this.scene.tiles[8]["value"].index == 4) {
-                    var pointerTileX = this.scene.map.worldToTileX(this.x)
-                    var pointerTileY = this.scene.map.worldToTileY(this.y)
+                    let pointerTileX = this.scene.map.worldToTileX(this.x)
+                    let pointerTileY = this.scene.map.worldToTileY(this.y)
                     this.scene.map.putTileAt(1, pointerTileX, pointerTileY)
                     this.health += 50
                 }
