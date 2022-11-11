@@ -1,4 +1,4 @@
-var healthBar;
+var healthBar
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
 
@@ -22,30 +22,25 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         scene.load.atlas('elf', 'src/assets/sprites/elf/elf.png', 'src/assets/sprites/elf/elf_atlas.json')
         scene.load.animation('elf_animation', 'src/assets/sprites/elf/elf_anim.json')
-        
+
     }
 
     create(scene) {
 
         // field of view range
         this.vision.scale = 0.4
+
     }
 
 
     update(scene) {
 
-        const tileUp = this.layer.getTileAtWorldXY(this.x, this.y - 32, true);
-        const tileDown = this.layer.getTileAtWorldXY(this.x, this.y + 32, true);
-        const tileLeft = this.layer.getTileAtWorldXY(this.x - 32, this.y, true);
-        const tileRight = this.layer.getTileAtWorldXY(this.x + 32, this.y, true);
-
-
         this.anims.play('elf_idle', true)
+        this.healthAdded = 0
 
         // Left
         if (this.inputKeys.left.isDown) {
-
-            if (!this.pressedLeft && tileLeft.index !== 5) {
+            if (!this.pressedLeft && this.scene.tiles[0]["value"].index !== 5) {
                 this.x -= 32
                 this.vision.x -= 32
                 this.pressedLeft = true
@@ -54,7 +49,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Right
         if (this.inputKeys.right.isDown) {
-            if (!this.pressedRight && tileRight.index !== 5) {
+            if (!this.pressedRight && this.scene.tiles[1]["value"].index !== 5) {
                 this.x += 32
                 this.vision.x += 32
                 this.pressedRight = true
@@ -63,7 +58,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         //  Down
         if (this.inputKeys.down.isDown) {
-            if (!this.pressedDown && tileDown.index !== 5) {
+            if (!this.pressedDown && this.scene.tiles[2]["value"].index !== 5) {
                 this.y += 32
                 this.vision.y += 32
                 this.pressedDown = true
@@ -71,7 +66,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         //  Up
-        if (this.inputKeys.up.isDown && tileUp.index !== 5) {
+        if (this.inputKeys.up.isDown && this.scene.tiles[3]["value"].index !== 5) {
             if (!this.pressedUp) {
                 this.y -= 32
                 this.vision.y -= 32
@@ -88,13 +83,41 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.pressedQ = true
         }
 
+        // Sow
+        if (this.inputKeys.E.isDown) {
+            if (!this.pressedE) {
+                for (let i = 0; i < this.scene.tiles.length; i++) {
+                    if (this.scene.tiles[i]["value"].index != 5) {
+                        var pointerTileX = this.scene.map.worldToTileX(this.scene.tiles[i]["x"] + this.x)
+                        var pointerTileY = this.scene.map.worldToTileY(this.scene.tiles[i]["y"] + this.y)
+                        this.scene.map.putTileAt(4, pointerTileX, pointerTileY)
+                        this.health -= 25
+                    }
+                }
+                this.pressedE = true
+            }
+        }
+
+        // Harvest
+        if (this.inputKeys.R.isDown) {
+            if (!this.pressedR) {
+                if (this.scene.tiles[8]["value"].index == 4) {
+                    var pointerTileX = this.scene.map.worldToTileX(this.x)
+                    var pointerTileY = this.scene.map.worldToTileY(this.y)
+                    this.scene.map.putTileAt(1, pointerTileX, pointerTileY)
+                    this.health += 50
+                }
+            }
+            this.pressedR = true
+        }
+
         if (this.inputKeys.Q.isUp) this.pressedQ = false
         if (this.inputKeys.up.isUp) this.pressedUp = false
         if (this.inputKeys.down.isUp) this.pressedDown = false
         if (this.inputKeys.left.isUp) this.pressedLeft = false
         if (this.inputKeys.right.isUp) this.pressedRight = false
-
-
+        if (this.inputKeys.E.isUp) this.pressedE = false
+        if (this.inputKeys.R.isUp) this.pressedR = false
 
     }
 

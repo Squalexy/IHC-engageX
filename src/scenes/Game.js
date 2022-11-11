@@ -2,7 +2,6 @@ import Phaser from '../lib/phaser.js'
 import Player from './Player.js'
 import CountdownController from './CountdownController.js'
 
-
 export default class Game extends Phaser.Scene {
 
 	/** @type {CountdownController} */
@@ -12,7 +11,6 @@ export default class Game extends Phaser.Scene {
         super('game')
     }
  
-
     preload() {
 
         this.load.image('bunny', 'src/assets/sprites/bunny2_ready.png')
@@ -24,29 +22,27 @@ export default class Game extends Phaser.Scene {
         this.load.audio('music', 'src/assets/audio/music1.mp3');
         this.load.audio('loseGame', 'src/assets/audio/loseGame.wav');
 
-        
-
         Player.preload(this)
 
     }
 
-
-    
     create() {
 
         // ----------------------------------------------------- TILEMAP CREATION 
         
-        const map = this.make.tilemap({
+        this.map = this.make.tilemap({
             key: 'map'
         })
-        const tileset = map.addTilesetImage('desert', 'tiles', 32, 32)
-        const layer = map.createLayer('toplayer', tileset, 0, 0)
-
+        const tileset = this.map.addTilesetImage('desert', 'tiles', 32, 32)
+        this.layer = this.map.createLayer('toplayer', tileset, 0, 0)
 
         // ----------------------------------------------------- SPRITES CREATION 
 
         this.player = new Player({scene:this, x:32+16, y:32+16, texture:'elf', frame:'elf_m_walk_1'})  
-        this.player.layer = layer
+        
+        // Player's health bar
+        this.player.health = 100;
+        this.player.maxHealth = 100;
 
         // ----------------------------------------------------- ZOOM & FOLLOW
 
@@ -61,7 +57,9 @@ export default class Game extends Phaser.Scene {
             down: Phaser.Input.Keyboard.KeyCodes.S, 
             left: Phaser.Input.Keyboard.KeyCodes.A,
             right: Phaser.Input.Keyboard.KeyCodes.D,
-            Q: Phaser.Input.Keyboard.KeyCodes.Q
+            Q: Phaser.Input.Keyboard.KeyCodes.Q,
+            E: Phaser.Input.Keyboard.KeyCodes.E,
+            R: Phaser.Input.Keyboard.KeyCodes.R,
         })
 
         // ----------------------------------------------------- DARK EFFECT 
@@ -73,7 +71,7 @@ export default class Game extends Phaser.Scene {
             height
         }, true)
         rt.fill(0x000000, 1)
-        rt.draw(layer)
+        rt.draw(this.layer)
         rt.setTint(0x0a2948)
 
         const vision = this.make.image({
@@ -89,33 +87,29 @@ export default class Game extends Phaser.Scene {
 
         this.player.vision = vision
 
-        // ----------------------------------------------------- Time 
+        // ----------------------------------------------------- COUNTDOWN 
+
         const timerLabel = this.add.text(150,-10, '90', { fontSize: 20 }).setOrigin(0.5)
 
         this.countdown = new CountdownController(this, timerLabel)
         this.countdown.start(this.handleCountdownFinished.bind(this))
-        
 
-        // Player's health bar
-        this.player.health = 100;
-        this.player.maxHealth = 100;
+        // ----------------------------------------------------- HEALTH BAR
 
         // change position if needed (but use same position for both images)
         this.backgroundBar = this.add.image(this.player.x + 300, 20, 'redHealthBar');
         this.backgroundBar.fixedToCamera = true;
 
-
         this.healthBar = this.add.image(this.player.x + 300, 20, 'greenHealthBar');
         this.healthBar.fixedToCamera = true;
         this.healthBarWidth = this.healthBar.width;
 
-
         // add text label to left of bar
         this.healthLabel = this.add.text(60, 12, 'Health', {fontSize:'20px', fill:'#ffffff'});
         this.healthLabel.fixedToCamera = true;
-
         
-        //
+        // ----------------------------------------------------- MUSIC
+
         this.music = this.sound.add("music",  { loop: true });
         //game.sound.setDecodedCallback(music, start, this);
         this.music.play()
@@ -123,9 +117,14 @@ export default class Game extends Phaser.Scene {
     }
 
     update() {
+
+        this.tiles = this.getTiles()
+
         this.player.update()
+
         this.countdown.update(this.player)
-        if(this.player.health == 0){
+
+        if(this.player.health <= 0){
             this.handleLifeFinished();
         }
 
@@ -139,11 +138,10 @@ export default class Game extends Phaser.Scene {
         this.healthLabel.setX(this.player.x - 25);
         this.healthLabel.setY(this.player.y + 140);
 
-
     }
 
-    handleCountdownFinished()
-	{
+    handleCountdownFinished(){
+
 		this.add.text(this.player.x, this.player.y - 180,  'GAME FINISHED!', { fontSize: 30 }).setOrigin(0.5)
 
         this.scene.pause()
@@ -152,10 +150,11 @@ export default class Game extends Phaser.Scene {
         this.loseGame = this.sound.add("loseGame",  { volume:0.4 , loop: false });
         //game.sound.setDecodedCallback(music, start, this);
         this.loseGame.play()
+
     }
 
-    handleLifeFinished()
-	{
+    handleLifeFinished(){
+
 		this.add.text(this.player.x, this.player.y - 180,  'YOU DIED!', { fontSize: 30 }).setOrigin(0.5)
 
         this.music.stop()
@@ -164,6 +163,67 @@ export default class Game extends Phaser.Scene {
         this.loseGame.play()
         this.scene.pause()
 
+    }
+
+    getTiles() {
+
+        let tiles = [{
+                name: 'tileLeft',
+                value: this.layer.getTileAtWorldXY(this.player.x - 32, this.player.y, true),
+                x: -32,
+                y: 0
+            },
+            {
+                name: 'tileRight',
+                value: this.layer.getTileAtWorldXY(this.player.x + 32, this.player.y, true),
+                x: 32,
+                y: 0
+            },
+            {
+                name: 'tileDown',
+                value: this.layer.getTileAtWorldXY(this.player.x, this.player.y + 32, true),
+                x: 0,
+                y: 32
+            },
+            {
+                name: 'tileUp',
+                value: this.layer.getTileAtWorldXY(this.player.x, this.player.y - 32, true),
+                x: 0,
+                y: -32
+            },
+            {
+                name: 'tileUpLeft',
+                value: this.layer.getTileAtWorldXY(this.player.x - 32, this.player.y - 32, true),
+                x: -32,
+                y: -32
+            },
+            {
+                name: 'tileUpRight',
+                value: this.layer.getTileAtWorldXY(this.player.x + 32, this.player.y - 32, true),
+                x: 32,
+                y: -32
+            },
+            {
+                name: 'tileDownLeft',
+                value: this.layer.getTileAtWorldXY(this.player.x - 32, this.player.y + 32, true),
+                x: -32,
+                y: 32
+            },
+            {
+                name: 'tileDownRight',
+                value: this.layer.getTileAtWorldXY(this.player.x + 32, this.player.y + 32, true),
+                x: 32,
+                y: 32
+            },
+            {
+                name: 'tileCenter',
+                value: this.layer.getTileAtWorldXY(this.player.x, this.player.y, true),
+                x: 0,
+                y: 0
+            },
+        ]
+    
+        return tiles
     }
 
 }
