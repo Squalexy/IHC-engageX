@@ -12,6 +12,7 @@ export default class CountdownController
     passedSeconds = 0
 
 	duration = 0
+	GameDuration = 60000
 
 	/**
 	 * 
@@ -28,7 +29,7 @@ export default class CountdownController
 	 * @param {() => void} callback
 	 * @param {number} duration 
 	 */
-	start(callback, duration = 60000)
+	start(callback, duration = this.GameDuration)
 	{
 		this.stop()
 		this.finishedCallback = callback
@@ -69,11 +70,13 @@ export default class CountdownController
         console.log(elapsed)
 		const remaining = this.duration - elapsed
 		const seconds = remaining / 1000
-        if(player.maxHealth - (elapsed/100) > 0){
-            player.health = player.maxHealth - (elapsed/100);
-        }else {
+        if( player.health - 0.05 > 0 && player.health - 0.05 < 100){
+            player.health = player.health - 0.05;
+        }else if(player.health - 0.05 < 0) {
             player.health = 0;
-        }
+        }else{
+			player.health = 100;
+		}
 
 		this.label.text = seconds.toFixed(2)
         this.label.setX(player.x);
