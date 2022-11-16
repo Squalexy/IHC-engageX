@@ -1,6 +1,5 @@
 export default class Player extends Phaser.Physics.Arcade.Sprite {
 
-
     constructor(data) {
         let {
             scene,
@@ -16,28 +15,25 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     }
 
-
     static preload(scene) {
 
         scene.load.spritesheet('sprite1', 'src/assets/sprites/sprite1/sprite1_anim.png', {
             frameWidth: 32,
             frameHeight: 32
         })
-
     }
 
     create(scene) {
 
-        // field of view range
-        this.vision.scale = 0.4
-        this.orientation = "right"
+
+        this.vision.scale = 0.4     // field of view range
+        this.orientation = "right"  // direction the player is oriented, starts oriented looking on the right
 
     }
 
-
     update(scene) {
 
-        this.anims.play('sprite1_idle', true)
+        if (!this.anims.isPlaying) this.anims.play('sprite1_idle', true)
 
         // Left
         if (this.inputKeys.left.isDown) {
@@ -124,28 +120,46 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.pressedR = true
         }
 
-        // Attack
-        /*
+        // Fight
         if (this.inputKeys.P.isDown) {
+
             this.anims.play('sprite1_attack', true)
+
             if (!this.pressedP) {
-                if (this.scene.tiles[8]["value"].index == 4) {
-                    let pointerTileX = this.scene.map.worldToTileX(this.x)
-                    let pointerTileY = this.scene.map.worldToTileY(this.y)
-                    this.scene.map.putTileAt(1, pointerTileX, pointerTileY)
-                    this.health += 15
+                if (this.scene.enemy.active) {
+
+                    // Attack in 4 directions: left, right, up, down
+                    if ((this.scene.enemy.x == this.x - 32 && this.scene.enemy.y == this.y) || 
+                        (this.scene.enemy.x == this.x + 32 && this.scene.enemy.y == this.y) ||
+                        (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y + 32) ||
+                        (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y - 32)){
+
+                        this.scene.enemy.health -= 10
+                        if (this.scene.enemy.health > 0) this.scene.enemy.anims.play('enemy1_hurt', true)
+                        else {
+                            this.scene.active = false
+                            this.scene.enemy.anims.play('enemy1_death', true)
+
+                            // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
+                            setTimeout(() => {
+                                this.scene.enemy.destroy()
+                            }, 500) 
+                        }
+                        
+                    }
                 }
             }
-            this.pressedR = true
-        }
-        */
 
-        // Run
+            this.pressedP = true
+        }
+
+
+        // Run (maximum 5 tiles left or right)
         if (this.inputKeys.F.isDown) {
 
             this.anims.play('sprite1_flee', true)
 
-            if (this.orientation == "left"){
+            if (this.orientation == "left") {
                 if (!this.pressedF) {
                     let pos = this.scene.layer.getTileAtWorldXY(this.x - 32, this.y, true)
                     for (let i = 1; i < 6; i++) {
@@ -160,10 +174,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                     }
                     this.pressedF = true
                 }
-            } 
-            
-            else if (this.orientation == "right"){
-                if (!this.pressedF){
+            } else if (this.orientation == "right") {
+                if (!this.pressedF) {
                     let pos = this.scene.layer.getTileAtWorldXY(this.x + 32, this.y, true)
                     for (let i = 1; i < 6; i++) {
                         if (pos.index == 5) break
@@ -178,7 +190,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                     this.pressedF = true
                 }
             }
-
         }
 
         if (this.inputKeys.Q.isUp) this.pressedQ = false
@@ -189,8 +200,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.inputKeys.E.isUp) this.pressedE = false
         if (this.inputKeys.R.isUp) this.pressedR = false
         if (this.inputKeys.F.isUp) this.pressedF = false
-
-        console.log(this.orientation)
+        if (this.inputKeys.P.isUp) this.pressedP = false
 
     }
 

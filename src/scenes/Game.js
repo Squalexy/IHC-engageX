@@ -60,7 +60,7 @@ export default class Game extends Phaser.Scene {
                 start: 0,
                 end: 7
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
         })
 
@@ -70,7 +70,7 @@ export default class Game extends Phaser.Scene {
                 start: 16,
                 end: 21
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
         })
 
@@ -80,7 +80,7 @@ export default class Game extends Phaser.Scene {
                 start: 24,
                 end: 29
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
         })
 
@@ -90,7 +90,7 @@ export default class Game extends Phaser.Scene {
                 start: 32,
                 end: 37
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
         })
 
@@ -100,7 +100,7 @@ export default class Game extends Phaser.Scene {
                 start: 40,
                 end: 45
             }),
-            repeat: 2,
+            repeat: 0,
             frameRate: 10
         })
 
@@ -110,7 +110,7 @@ export default class Game extends Phaser.Scene {
                 start: 48,
                 end: 51
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
         })
 
@@ -120,7 +120,7 @@ export default class Game extends Phaser.Scene {
                 start: 52,
                 end: 55
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 8
         })
 
@@ -130,7 +130,7 @@ export default class Game extends Phaser.Scene {
                 start: 56,
                 end: 59
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
         })
 
@@ -142,8 +142,18 @@ export default class Game extends Phaser.Scene {
                 start: 0,
                 end: 7
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
+        }).addFrame(this.anims.generateFrameNames('enemy1', {start: 14, end: 14}))
+
+        this.anims.create({
+            key: 'enemy1_empty',
+            frames: this.anims.generateFrameNumbers('enemy1', {
+                start: 14,
+                end: 14
+            }),
+            repeat: 0,
+            frameRate:10
         })
 
         this.anims.create({
@@ -152,7 +162,7 @@ export default class Game extends Phaser.Scene {
                 start: 8,
                 end: 13
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
         })
 
@@ -162,7 +172,7 @@ export default class Game extends Phaser.Scene {
                 start: 16,
                 end: 19
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
         })
 
@@ -172,7 +182,7 @@ export default class Game extends Phaser.Scene {
                 start: 20,
                 end: 23
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
         })
 
@@ -180,7 +190,7 @@ export default class Game extends Phaser.Scene {
             key: 'enemy1_idle',
             frames: this.anims.generateFrameNumbers('enemy1', {
                 start: 24,
-                end: 27
+                end: 27,
             }),
             repeat: -1,
             frameRate: 10
@@ -264,14 +274,20 @@ export default class Game extends Phaser.Scene {
 
         this.tiles = this.getTiles()
 
+        // ----------------------------------------------------- PLAYERS DYING UPDATE
+
+        if(this.player.health <= 0) this.handleLifeFinished() 
+
+        // ----------------------------------------------------- UPDATE PLAYER AND ENEMY
+
         this.player.update()
-        this.enemy.update()
+        if (this.enemy.active) this.enemy.update() // this.enemy.active -> verifies if enemy is alive
 
-        this.countdown.update(this.player)
+        // ----------------------------------------------------- UPDATE COUNTDOWN
 
-        if(this.player.health <= 0){
-            this.handleLifeFinished();
-        }
+        this.countdown.update(this.player, this.enemy)
+
+        // ----------------------------------------------------- UPDATE HEALTH BAR
 
         this.healthBar.displayWidth = this.player.health / this.player.maxHealth * this.healthBarWidth;
         this.healthBar.setX(this.player.x  - (1 - this.player.health / this.player.maxHealth)/2 * this.healthBarWidth);

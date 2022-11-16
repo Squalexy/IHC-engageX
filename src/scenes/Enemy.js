@@ -27,12 +27,13 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     create(scene) {
 
-    }
+        this.active = true // active = is alive
 
+    }
 
     update(scene) {
 
-        this.anims.play('enemy1_idle', true)
+        if (!this.anims.isPlaying && this.active) this.anims.play('enemy1_idle', true) // "!this.anims.isPlaying" is to not overlap the idle animation on another one
 
     }
 

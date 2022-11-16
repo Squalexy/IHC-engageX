@@ -59,7 +59,7 @@ export default class CountdownController
 		}
 	}
 
-	update(player)
+	update(player, enemy)
 	{
         if (!this.timerEvent || this.duration <= 0)
 		{
@@ -69,12 +69,20 @@ export default class CountdownController
 		const elapsed = this.timerEvent.getElapsed()
 		const remaining = this.duration - elapsed
 		const seconds = remaining / 1000
-        if( player.health - 0.05 > 0 && player.health - 0.05 < 100){
+        if(player.health - 0.05 > 0 && player.health - 0.05 < 100){
             player.health = player.health - 0.05;
         }else if(player.health - 0.05 < 0) {
             player.health = 0;
         }else{
 			player.health = 100;
+		}
+
+		if(enemy.health - 0.05 > 0 && enemy.health - 0.05 < 100){
+            enemy.health = enemy.health - 0.05;
+        }else if(enemy.health - 0.05 < 0) {
+            enemy.health = 0;
+        }else{
+			enemy.health = 100;
 		}
 
 		this.label.text = seconds.toFixed(2)
