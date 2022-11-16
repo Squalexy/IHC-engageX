@@ -143,35 +143,39 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Run
         if (this.inputKeys.F.isDown) {
 
-            this.anims.play('sprite1_run', true)
+            this.anims.play('sprite1_flee', true)
 
             if (this.orientation == "left"){
                 if (!this.pressedF) {
+                    let pos = this.scene.layer.getTileAtWorldXY(this.x - 32, this.y, true)
                     for (let i = 1; i < 6; i++) {
-                        if (this.scene.tiles[0]["value"].index == 5) break
+                        if (pos.index == 5) break
                         else {
                             this.x -= 32
                             this.body.offset.x = 32
                             this.scaleX = -1
                             this.vision.x -= 32
+                            pos = this.scene.layer.getTileAtWorldXY(this.x - 32, this.y, true)
                         }
-                        this.pressedF = true
                     }
+                    this.pressedF = true
                 }
             } 
             
             else if (this.orientation == "right"){
                 if (!this.pressedF){
+                    let pos = this.scene.layer.getTileAtWorldXY(this.x + 32, this.y, true)
                     for (let i = 1; i < 6; i++) {
-                        if (this.scene.tiles[1]["value"].index == 5) break
+                        if (pos.index == 5) break
                         else {
                             this.x += 32
                             this.body.offset.x = 0
                             this.scaleX = 1
                             this.vision.x += 32
+                            pos = this.scene.layer.getTileAtWorldXY(this.x + 32, this.y, true)
                         }
-                        this.pressedF = true
                     }
+                    this.pressedF = true
                 }
             }
 
