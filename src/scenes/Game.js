@@ -1,5 +1,6 @@
 import Phaser from '../lib/phaser.js'
 import Player from './Player.js'
+import Enemy from './Enemy.js'
 import CountdownController from './CountdownController.js'
 
 export default class Game extends Phaser.Scene {
@@ -13,9 +14,10 @@ export default class Game extends Phaser.Scene {
  
     preload() {
 
-        this.load.image('bunny', 'src/assets/sprites/bunny2_ready.png')
+
         this.load.image('tiles', 'src/assets/tiles/desert.png')
         this.load.tilemapTiledJSON('map', 'src/assets/tiles/map1.json')
+
         this.load.image('vision', 'src/assets/particles/fog.png')
         this.load.image('greenHealthBar', 'src/assets/healthBar/green_health_bar.png');
         this.load.image('redHealthBar', 'src/assets/healthBar/red_health_bar.png');
@@ -23,6 +25,7 @@ export default class Game extends Phaser.Scene {
         this.load.audio('loseGame', 'src/assets/audio/loseGame.wav');
 
         Player.preload(this)
+        Enemy.preload(this)
 
     }
 
@@ -38,11 +41,160 @@ export default class Game extends Phaser.Scene {
 
         // ----------------------------------------------------- SPRITES CREATION 
 
-        this.player = new Player({scene:this, x:32+16, y:32+16, texture:'elf', frame:'elf_m_walk_1'})  
-        
-        // Player's health bar
+        this.player = new Player({scene:this, x:32+16, y:32+16, texture:'sprite1', frame:'sprite1_idle'})  
+        this.enemy = new Enemy({scene:this, x:32 * 5 + 16, y:32 * 5 + 16, texture: 'enemy1', frame: 'enemy1_idle'})
+
         this.player.health = 100;
         this.player.maxHealth = 100;
+
+        this.enemy.health = 100
+        this.enemy.maxHealth = 100
+
+        // ----------------------------------------------------- ANIMATIONS CREATION 
+
+        // ------------------------------------ PLAYER
+
+        this.anims.create({
+            key: 'sprite1_death',
+            frames: this.anims.generateFrameNumbers('sprite1', {
+                start: 0,
+                end: 7
+            }),
+            repeat: 0,
+            frameRate: 10
+        })
+
+        this.anims.create({
+            key: 'sprite1_attack',
+            frames: this.anims.generateFrameNumbers('sprite1', {
+                start: 16,
+                end: 21
+            }),
+            repeat: 0,
+            frameRate: 10
+        })
+
+        this.anims.create({
+            key: 'sprite1_flee',
+            frames: this.anims.generateFrameNumbers('sprite1', {
+                start: 24,
+                end: 29
+            }),
+            repeat: 0,
+            frameRate: 10
+        })
+
+        this.anims.create({
+            key: 'sprite1_sow',
+            frames: this.anims.generateFrameNumbers('sprite1', {
+                start: 32,
+                end: 37
+            }),
+            repeat: 0,
+            frameRate: 10
+        })
+
+        this.anims.create({
+            key: 'sprite1_walk',
+            frames: this.anims.generateFrameNumbers('sprite1', {
+                start: 40,
+                end: 45
+            }),
+            repeat: 0,
+            frameRate: 10
+        })
+
+        this.anims.create({
+            key: 'sprite1_hurt',
+            frames: this.anims.generateFrameNumbers('sprite1', {
+                start: 48,
+                end: 51
+            }),
+            repeat: 0,
+            frameRate: 10
+        })
+
+        this.anims.create({
+            key: 'sprite1_idle',
+            frames: this.anims.generateFrameNumbers('sprite1', {
+                start: 52,
+                end: 55
+            }),
+            repeat: 0,
+            frameRate: 8
+        })
+
+        this.anims.create({
+            key: 'sprite1_steal',
+            frames: this.anims.generateFrameNumbers('sprite1', {
+                start: 56,
+                end: 59
+            }),
+            repeat: 0,
+            frameRate: 10
+        })
+
+        // ------------------------------------ ENEMY
+
+        this.anims.create({
+            key: 'enemy1_death',
+            frames: this.anims.generateFrameNumbers('enemy1', {
+                start: 0,
+                end: 7
+            }),
+            repeat: 0,
+            frameRate: 10
+        }).addFrame(this.anims.generateFrameNames('enemy1', {start: 14, end: 14}))
+
+        this.anims.create({
+            key: 'enemy1_empty',
+            frames: this.anims.generateFrameNumbers('enemy1', {
+                start: 14,
+                end: 14
+            }),
+            repeat: 0,
+            frameRate:10
+        })
+
+        this.anims.create({
+            key: 'enemy1_walk',
+            frames: this.anims.generateFrameNumbers('enemy1', {
+                start: 8,
+                end: 13
+            }),
+            repeat: 0,
+            frameRate: 10
+        })
+
+        this.anims.create({
+            key: 'enemy1_attack',
+            frames: this.anims.generateFrameNumbers('enemy1', {
+                start: 16,
+                end: 19
+            }),
+            repeat: 0,
+            frameRate: 10
+        })
+
+        this.anims.create({
+            key: 'enemy1_hurt',
+            frames: this.anims.generateFrameNumbers('enemy1', {
+                start: 20,
+                end: 23
+            }),
+            repeat: 0,
+            frameRate: 10
+        })
+
+        this.anims.create({
+            key: 'enemy1_idle',
+            frames: this.anims.generateFrameNumbers('enemy1', {
+                start: 24,
+                end: 27,
+            }),
+            repeat: -1,
+            frameRate: 10
+        })
 
         // ----------------------------------------------------- ZOOM & FOLLOW
 
@@ -60,6 +212,8 @@ export default class Game extends Phaser.Scene {
             Q: Phaser.Input.Keyboard.KeyCodes.Q,
             E: Phaser.Input.Keyboard.KeyCodes.E,
             R: Phaser.Input.Keyboard.KeyCodes.R,
+            P: Phaser.Input.Keyboard.KeyCodes.P,
+            F: Phaser.Input.Keyboard.KeyCodes.F,
         })
 
         // ----------------------------------------------------- DARK EFFECT 
@@ -120,13 +274,20 @@ export default class Game extends Phaser.Scene {
 
         this.tiles = this.getTiles()
 
+        // ----------------------------------------------------- PLAYERS DYING UPDATE
+
+        if(this.player.health <= 0) this.handleLifeFinished() 
+
+        // ----------------------------------------------------- UPDATE PLAYER AND ENEMY
+
         this.player.update()
+        if (this.enemy.active) this.enemy.update() // this.enemy.active -> verifies if enemy is alive
 
-        this.countdown.update(this.player)
+        // ----------------------------------------------------- UPDATE COUNTDOWN
 
-        if(this.player.health <= 0){
-            this.handleLifeFinished();
-        }
+        this.countdown.update(this.player, this.enemy)
+
+        // ----------------------------------------------------- UPDATE HEALTH BAR
 
         this.healthBar.displayWidth = this.player.health / this.player.maxHealth * this.healthBarWidth;
         this.healthBar.setX(this.player.x  - (1 - this.player.health / this.player.maxHealth)/2 * this.healthBarWidth);
