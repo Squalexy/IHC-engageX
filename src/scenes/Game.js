@@ -5,13 +5,13 @@ import CountdownController from './CountdownController.js'
 
 export default class Game extends Phaser.Scene {
 
-	/** @type {CountdownController} */
-	countdown
+    /** @type {CountdownController} */
+    countdown
 
     constructor() {
         super('game')
     }
- 
+
     preload() {
 
         // ----------------------------------------------------- PLUGINS 
@@ -39,13 +39,13 @@ export default class Game extends Phaser.Scene {
 
         // ----------------------------------------------------- BUTTONS
 
-        this.load.image('button_harvest','src/assets/buttons/Harvest.png')
-        this.load.image('button_sow','src/assets/buttons/Sow.png')
-        this.load.image('button_save','src/assets/buttons/Save.png')
-        this.load.image('button_share','src/assets/buttons/Share.png')
-        this.load.image('button_fight','src/assets/buttons/Fight.png')
-        this.load.image('button_steal','src/assets/buttons/Steal.png')
-        this.load.image('button_flee','src/assets/buttons/Flee.png')
+        this.load.image('button_harvest', 'src/assets/buttons/Harvest.png')
+        this.load.image('button_sow', 'src/assets/buttons/Sow.png')
+        this.load.image('button_save', 'src/assets/buttons/Save.png')
+        this.load.image('button_share', 'src/assets/buttons/Share.png')
+        this.load.image('button_fight', 'src/assets/buttons/Fight.png')
+        this.load.image('button_steal', 'src/assets/buttons/Steal.png')
+        this.load.image('button_flee', 'src/assets/buttons/Flee.png')
 
         // ----------------------------------------------------- CLASSES 
 
@@ -57,7 +57,7 @@ export default class Game extends Phaser.Scene {
     create() {
 
         // ----------------------------------------------------- TILEMAP CREATION 
-        
+
         this.map = this.make.tilemap({
             key: 'map'
         })
@@ -66,8 +66,20 @@ export default class Game extends Phaser.Scene {
 
         // ----------------------------------------------------- SPRITES CREATION 
 
-        this.player = new Player({scene:this, x:32+16, y:32+16, texture:'sprite1', frame:'sprite1_idle'})  
-        this.enemy = new Enemy({scene:this, x:32 * 5 + 16, y:32 * 5 + 16, texture: 'enemy1', frame: 'enemy1_idle'})
+        this.player = new Player({
+            scene: this,
+            x: 32 + 16,
+            y: 32 + 16,
+            texture: 'sprite1',
+            frame: 'sprite1_idle'
+        })
+        this.enemy = new Enemy({
+            scene: this,
+            x: 32 * 5 + 16,
+            y: 32 * 5 + 16,
+            texture: 'enemy1',
+            frame: 'enemy1_idle'
+        })
 
         this.player.health = 100;
         this.player.maxHealth = 100;
@@ -167,7 +179,10 @@ export default class Game extends Phaser.Scene {
             }),
             repeat: 0,
             frameRate: 10
-        }).addFrame(this.anims.generateFrameNames('enemy1', {start: 14, end: 14}))
+        }).addFrame(this.anims.generateFrameNames('enemy1', {
+            start: 14,
+            end: 14
+        }))
 
         this.anims.create({
             key: 'enemy1_empty',
@@ -176,7 +191,7 @@ export default class Game extends Phaser.Scene {
                 end: 14
             }),
             repeat: 0,
-            frameRate:10
+            frameRate: 10
         })
 
         this.anims.create({
@@ -229,7 +244,7 @@ export default class Game extends Phaser.Scene {
 
         this.player.inputKeys = this.input.keyboard.addKeys({
             up: Phaser.Input.Keyboard.KeyCodes.W,
-            down: Phaser.Input.Keyboard.KeyCodes.S, 
+            down: Phaser.Input.Keyboard.KeyCodes.S,
             left: Phaser.Input.Keyboard.KeyCodes.A,
             right: Phaser.Input.Keyboard.KeyCodes.D,
             Q: Phaser.Input.Keyboard.KeyCodes.Q,
@@ -238,10 +253,12 @@ export default class Game extends Phaser.Scene {
             P: Phaser.Input.Keyboard.KeyCodes.P,
             F: Phaser.Input.Keyboard.KeyCodes.F,
             SPACE: Phaser.Input.Keyboard.KeyCodes.SPACE,
+            C: Phaser.Input.Keyboard.KeyCodes.C,
+            V: Phaser.Input.Keyboard.KeyCodes.V,
         })
 
         // ----------------------------------------------------- DARK EFFECT 
-        
+
         const width = this.scale.width * 2
         const height = this.scale.height * 2
         const rt = this.make.renderTexture({
@@ -267,7 +284,9 @@ export default class Game extends Phaser.Scene {
 
         // ----------------------------------------------------- COUNTDOWN 
 
-        const timerLabel = this.add.text(150,-10, '90', { fontSize: 20 }).setOrigin(0.5)
+        const timerLabel = this.add.text(150, -10, '90', {
+            fontSize: 20
+        }).setOrigin(0.5)
 
         this.countdown = new CountdownController(this, timerLabel)
         this.countdown.start(this.handleCountdownFinished.bind(this))
@@ -283,65 +302,93 @@ export default class Game extends Phaser.Scene {
         this.healthBarWidth = this.healthBar.width;
 
         // add text label to left of bar
-        this.healthLabel = this.add.text(60, 12, 'Health', {fontSize:'20px', fill:'#ffffff'});
+        this.healthLabel = this.add.text(60, 12, 'Health', {
+            fontSize: '20px',
+            fill: '#ffffff'
+        });
         this.healthLabel.fixedToCamera = true;
 
         // ----------------------------------------------------- XP
 
         this.player.xp = 0
-        this.xpLabel = this.add.text(0, 0, 'XP ' + this.player.xp, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
+        this.xpLabel = this.add.text(0, 0, 'XP ' + this.player.xp, {
+            fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif'
+        })
         this.xpLabel.setX(this.healthLabel.x + 200)
         this.xpLabel.setY(this.healthLabel.y)
 
         // ----------------------------------------------------- MUSIC
 
-        this.music = this.sound.add("music",  { loop: true });
+        this.music = this.sound.add("music", {
+            loop: true
+        });
         //game.sound.setDecodedCallback(music, start, this);
         this.music.play()
 
         // ----------------------------------------------------- BUTTONS CREATION 
 
         // Harvest
-        this.button_harvest = this.add.sprite(this.player.x + 400, this.player.y + 300, 'button_harvest').setInteractive()
-        this.button_harvest.on('pointerdown', function () {this.harvestOnClick()}, this)  
-        this.button_harvest.on('pointerout', function(){})
-        this.button_harvest.on('pointerdown', function(){})   
+        this.button_harvest = this.add.sprite(this.player.x + 400, this.player.y + 340, 'button_harvest').setInteractive()
+        this.button_harvest.on('pointerdown', function () {
+            this.harvestOnClick()
+        }, this)
+        this.button_harvest.on('pointerout', function () {})
+        this.button_harvest.on('pointerdown', function () {})
 
         // Sow
-        this.button_sow = this.add.sprite(this.player.x + 400, this.player.y + 300, 'button_sow').setInteractive()
-        this.button_sow.on('pointerdown', function () {this.sowOnClick()}, this)  
-        this.button_sow.on('pointerout', function(){})
-        this.button_sow.on('pointerdown', function(){})   
+        this.button_sow = this.add.sprite(this.player.x + 400, this.player.y + 340, 'button_sow').setInteractive()
+        this.button_sow.on('pointerdown', function () {
+            this.sowOnClick()
+        }, this)
+        this.button_sow.on('pointerout', function () {})
+        this.button_sow.on('pointerdown', function () {})
 
         // Save
-        this.button_save = this.add.sprite(this.player.x + 400, this.player.y + 300, 'button_save').setInteractive()
-        this.button_save.on('pointerdown', function () {this.saveOnClick()}, this)  
-        this.button_save.on('pointerout', function(){})
-        this.button_save.on('pointerdown', function(){})   
+        this.button_save = this.add.sprite(this.player.x + 400, this.player.y + 340, 'button_save').setInteractive()
+        this.button_save.on('pointerdown', function () {
+            this.saveOnClick()
+        }, this)
+        this.button_save.on('pointerout', function () {})
+        this.button_save.on('pointerdown', function () {})
 
         // Share
-        this.button_share = this.add.sprite(this.player.x + 400, this.player.y + 300, 'button_share').setInteractive()
-        this.button_share.on('pointerdown', function () {this.harvestOnClick()}, this)  
-        this.button_share.on('pointerout', function(){})
-        this.button_share.on('pointerdown', function(){})   
+        this.button_share = this.add.sprite(this.player.x + 400, this.player.y + 340, 'button_share').setInteractive()
+        this.button_share.on('pointerdown', function () {
+            this.shareOnClick()
+        }, this)
+        this.button_share.on('pointerout', function () {})
+        this.button_share.on('pointerdown', function () {})
 
         // Fight
-        this.button_fight = this.add.sprite(this.player.x + 400, this.player.y + 300, 'button_fight').setInteractive()
-        this.button_fight.on('pointerdown', function () {this.fightOnClick()}, this)  
-        this.button_fight.on('pointerout', function(){})
-        this.button_fight.on('pointerdown', function(){})   
+        this.button_fight = this.add.sprite(this.player.x + 400, this.player.y + 340, 'button_fight').setInteractive()
+        this.button_fight.on('pointerdown', function () {
+            this.fightOnClick()
+        }, this)
+        this.button_fight.on('pointerout', function () {})
+        this.button_fight.on('pointerdown', function () {})
 
         // Steal
-        this.button_steal = this.add.sprite(this.player.x + 400, this.player.y + 300, 'button_steal').setInteractive()
-        this.button_steal.on('pointerdown', function () {this.harvestOnClick()}, this)  
-        this.button_steal.on('pointerout', function(){})
-        this.button_steal.on('pointerdown', function(){})   
+        this.button_steal = this.add.sprite(this.player.x + 400, this.player.y + 340, 'button_steal').setInteractive()
+        this.button_steal.on('pointerdown', function () {
+            this.stealOnClick()
+        }, this)
+        this.button_steal.on('pointerout', function () {})
+        this.button_steal.on('pointerdown', function () {})
 
         // Flee
-        this.button_flee = this.add.sprite(this.player.x + 400, this.player.y + 300, 'button_flee').setInteractive()
-        this.button_flee.on('pointerdown', function () {this.fleeOnClick()}, this)  
-        this.button_flee.on('pointerout', function(){})
-        this.button_flee.on('pointerdown', function(){})   
+        this.button_flee = this.add.sprite(this.player.x + 400, this.player.y + 340, 'button_flee').setInteractive()
+        this.button_flee.on('pointerdown', function () {
+            this.fleeOnClick()
+        }, this)
+        this.button_flee.on('pointerout', function () {})
+        this.button_flee.on('pointerdown', function () {})
+
+        this.buttonLabel = this.add.text(0, 0, 
+            '[W] Up\n[S] Down\n[A] Left\n[D] Right\n[Q] Dark effect\n[E] Sow\n[R] Harvest\n[P] Fight\n[C] Steal\n[V] Share\n[F] Save\n[SPACE] Flee', 
+            {fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
+            fontSize: 10})
+        this.buttonLabel.setX(this.player.x - 300)
+        this.buttonLabel.setY(this.player.y - 230)
 
     }
 
@@ -351,7 +398,7 @@ export default class Game extends Phaser.Scene {
 
         // ----------------------------------------------------- PLAYERS DYING UPDATE
 
-        if(this.player.health <= 0) this.handleLifeFinished() 
+        if (this.player.health <= 0) this.handleLifeFinished()
 
         // ----------------------------------------------------- UPDATE PLAYER AND ENEMY
 
@@ -365,9 +412,9 @@ export default class Game extends Phaser.Scene {
         // ----------------------------------------------------- UPDATE HEALTH BAR
 
         this.healthBar.displayWidth = this.player.health / this.player.maxHealth * this.healthBarWidth;
-        this.healthBar.setX(this.player.x  - (1 - this.player.health / this.player.maxHealth)/2 * this.healthBarWidth);
+        this.healthBar.setX(this.player.x - (1 - this.player.health / this.player.maxHealth) / 2 * this.healthBarWidth);
         this.healthBar.setY(this.player.y + 170);
-        
+
         this.backgroundBar.setX(this.player.x);
         this.backgroundBar.setY(this.player.y + 170);
 
@@ -377,50 +424,63 @@ export default class Game extends Phaser.Scene {
         // ----------------------------------------------------- UPDATE BUTTONS
 
         this.button_harvest.x = this.player.x - 150
-        this.button_harvest.y = this.player.y + 200
+        this.button_harvest.y = this.player.y + 215
 
         this.button_sow.x = this.player.x - 100
-        this.button_sow.y = this.player.y + 200
+        this.button_sow.y = this.player.y + 215
 
         this.button_save.x = this.player.x - 50
-        this.button_save.y = this.player.y + 200
+        this.button_save.y = this.player.y + 215
 
         this.button_share.x = this.player.x
-        this.button_share.y = this.player.y + 200
+        this.button_share.y = this.player.y + 215
 
         this.button_fight.x = this.player.x + 50
-        this.button_fight.y = this.player.y + 200
+        this.button_fight.y = this.player.y + 215
 
         this.button_steal.x = this.player.x + 100
-        this.button_steal.y = this.player.y + 200
+        this.button_steal.y = this.player.y + 215
 
         this.button_flee.x = this.player.x + 150
-        this.button_flee.y = this.player.y + 200
+        this.button_flee.y = this.player.y + 215
 
         this.xpLabel.setX(this.healthLabel.x + 140)
         this.xpLabel.setY(this.healthLabel.y)
+        
+        this.buttonLabel.setX(this.player.x - 300)
+        this.buttonLabel.setY(this.player.y - 230)
 
     }
 
-    handleCountdownFinished(){
+    handleCountdownFinished() {
 
-		this.add.text(this.player.x, this.player.y - 180,  'GAME FINISHED!', { fontSize: 30 }).setOrigin(0.5)
+        this.add.text(this.player.x, this.player.y - 180, 'GAME FINISHED!', {
+            fontSize: 30
+        }).setOrigin(0.5)
 
         this.scene.pause()
-        
+
         this.music.stop()
-        this.loseGame = this.sound.add("loseGame",  { volume:0.4 , loop: false });
+        this.loseGame = this.sound.add("loseGame", {
+            volume: 0.4,
+            loop: false
+        });
         //game.sound.setDecodedCallback(music, start, this);
         this.loseGame.play()
 
     }
 
-    handleLifeFinished(){
+    handleLifeFinished() {
 
-		this.add.text(this.player.x, this.player.y - 180,  'YOU DIED!', { fontSize: 30 }).setOrigin(0.5)
+        this.add.text(this.player.x, this.player.y - 180, 'YOU DIED!', {
+            fontSize: 30
+        }).setOrigin(0.5)
 
         this.music.stop()
-        this.loseGame = this.sound.add("loseGame",  { volume:0.4 , loop: false });
+        this.loseGame = this.sound.add("loseGame", {
+            volume: 0.4,
+            loop: false
+        });
         //game.sound.setDecodedCallback(music, start, this);
         this.loseGame.play()
         this.scene.pause()
@@ -484,11 +544,11 @@ export default class Game extends Phaser.Scene {
                 y: 0
             },
         ]
-    
+
         return tiles
     }
 
-    harvestOnClick(){
+    harvestOnClick() {
 
         this.player.anims.play('sprite1_sow', true)
         this.tiles = this.getTiles()
@@ -500,7 +560,7 @@ export default class Game extends Phaser.Scene {
         }
     }
 
-    sowOnClick(){
+    sowOnClick() {
 
         this.player.anims.play('sprite1_sow', true)
         this.tiles = this.getTiles()
@@ -515,16 +575,16 @@ export default class Game extends Phaser.Scene {
         }
     }
 
-    fightOnClick(){
+    fightOnClick() {
 
         this.player.anims.play('sprite1_attack', true)
 
         if (this.enemy.active) {
             // Attack in 4 directions: left, right, up, down
-            if ((this.enemy.x == this.player.x - 32 && this.enemy.y == this.player.y) || 
+            if ((this.enemy.x == this.player.x - 32 && this.enemy.y == this.player.y) ||
                 (this.enemy.x == this.player.x + 32 && this.enemy.y == this.player.y) ||
                 (this.enemy.x == this.player.x && this.enemy.y == this.player.y + 32) ||
-                (this.enemy.x == this.player.x && this.enemy.y == this.player.y - 32)){
+                (this.enemy.x == this.player.x && this.enemy.y == this.player.y - 32)) {
 
                 this.enemy.health -= 10
 
@@ -535,14 +595,14 @@ export default class Game extends Phaser.Scene {
                     // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
                     setTimeout(() => {
                         this.enemy.destroy()
-                    }, 500) 
+                    }, 500)
                 }
             }
         }
 
     }
 
-    fleeOnClick(){
+    fleeOnClick() {
 
         this.player.anims.play('sprite1_flee', true)
 
@@ -577,7 +637,7 @@ export default class Game extends Phaser.Scene {
         }
     }
 
-    saveOnClick(){
+    saveOnClick() {
 
         this.player.anims.play('sprite1_sow', true)
 
@@ -587,6 +647,81 @@ export default class Game extends Phaser.Scene {
         this.xpLabel.setX(this.healthLabel.x + 140)
         this.xpLabel.setY(this.healthLabel.y)
 
+    }
+
+    stealOnClick() {
+
+        this.player.anims.play('sprite1_sow', true)
+
+        if (this.enemy.active) {
+
+            // Steal in 4 directions: left, right, up, down
+            if ((this.enemy.x == this.player.x - 32 && this.enemy.y == this.player.y) || 
+                (this.enemy.x == this.player.x + 32 && this.enemy.y == this.player.y) ||
+                (this.enemy.x == this.player.x && this.enemy.y == this.player.y + 32) ||
+                (this.enemy.x == this.player.x && this.enemy.y == this.player.y - 32)){
+
+                const probability = Math.floor(Math.random() * 100)
+                console.log(probability)
+
+                if (probability < 25) {
+
+                    this.enemy.health -= 10
+
+                    if (this.enemy.health > 0) this.enemy.anims.play('enemy1_hurt', true)
+                    else {
+                        this.active = false
+                        this.enemy.anims.play('enemy1_death', true)
+
+                        // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
+                        setTimeout(() => {
+                            this.enemy.destroy()
+                        }, 500) 
+                    }
+                    this.player.health += 10
+                }
+            }
+        }
+
+
+    }
+
+    shareOnClick() {
+
+        this.player.anims.play('sprite1_sow', true)
+
+            if (this.enemy.active) {
+
+                // Steal in 4 directions: left, right, up, down
+                if ((this.enemy.x == this.player.x - 32 && this.enemy.y == this.player.y) || 
+                    (this.enemy.x == this.player.x + 32 && this.enemy.y == this.player.y) ||
+                    (this.enemy.x == this.player.x && this.enemy.y == this.player.y + 32) ||
+                    (this.enemy.x == this.player.x && this.enemy.y == this.player.y - 32)){
+
+                    var healthPlayerNow = this.player.health
+                    var healthEnemyNow = this.enemy.health
+
+                    this.player.health -= healthPlayerNow / 2
+                    this.player.health += healthEnemyNow / 2
+
+                    this.enemy.health -= healthEnemyNow / 2
+                    this.enemy.health += healthPlayerNow  / 2
+
+                    if (this.enemy.health > 0) this.enemy.anims.play('enemy1_hurt', true)
+                    else {
+                        this.active = false
+                        this.enemy.anims.play('enemy1_death', true)
+
+                        // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
+                        setTimeout(() => {
+                            this.enemy.destroy()
+                        }, 500) 
+                    }
+                    this.player.health += 10
+                    
+                }
+            }
+        
     }
 
 }

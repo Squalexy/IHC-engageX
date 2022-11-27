@@ -206,6 +206,88 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.pressedF = true
         }
 
+        // Steal
+        if (this.inputKeys.C.isDown) {
+
+            this.anims.play('sprite1_sow', true)
+
+            if (!this.pressedC) {
+
+                if (this.scene.enemy.active) {
+
+                    // Steal in 4 directions: left, right, up, down
+                    if ((this.scene.enemy.x == this.x - 32 && this.scene.enemy.y == this.y) || 
+                        (this.scene.enemy.x == this.x + 32 && this.scene.enemy.y == this.y) ||
+                        (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y + 32) ||
+                        (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y - 32)){
+
+                        const probability = Math.floor(Math.random() * 100)
+                        console.log(probability)
+
+                        if (probability < 25) {
+
+                            this.scene.enemy.health -= 10
+
+                            if (this.scene.enemy.health > 0) this.scene.enemy.anims.play('enemy1_hurt', true)
+                            else {
+                                this.scene.active = false
+                                this.scene.enemy.anims.play('enemy1_death', true)
+    
+                                // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
+                                setTimeout(() => {
+                                    this.scene.enemy.destroy()
+                                }, 500) 
+                            }
+                            this.health += 10
+                        }
+                    }
+                }
+            }
+            this.pressedC = true
+        }
+
+        // Share
+        if (this.inputKeys.V.isDown) {
+
+            this.anims.play('sprite1_sow', true)
+
+            if (!this.pressedV) {
+
+                if (this.scene.enemy.active) {
+
+                    // Steal in 4 directions: left, right, up, down
+                    if ((this.scene.enemy.x == this.x - 32 && this.scene.enemy.y == this.y) || 
+                        (this.scene.enemy.x == this.x + 32 && this.scene.enemy.y == this.y) ||
+                        (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y + 32) ||
+                        (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y - 32)){
+
+                        var healthPlayerNow = this.health
+                        var healthEnemyNow = this.scene.enemy.health
+
+                        this.health -= healthPlayerNow / 2
+                        this.health += healthEnemyNow / 2
+ 
+                        this.scene.enemy.health -= healthEnemyNow / 2
+                        this.scene.enemy.health += healthPlayerNow  / 2
+
+                        if (this.scene.enemy.health > 0) this.scene.enemy.anims.play('enemy1_hurt', true)
+                        else {
+                            this.scene.active = false
+                            this.scene.enemy.anims.play('enemy1_death', true)
+
+                            // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
+                            setTimeout(() => {
+                                this.scene.enemy.destroy()
+                            }, 500) 
+                        }
+                        this.health += 10
+                        
+                    }
+                }
+            }
+            this.pressedV = true
+        }
+        
         if (this.inputKeys.Q.isUp) this.pressedQ = false
         if (this.inputKeys.up.isUp) this.pressedUp = false
         if (this.inputKeys.down.isUp) this.pressedDown = false
@@ -215,10 +297,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.inputKeys.R.isUp) this.pressedR = false
         if (this.inputKeys.F.isUp) this.pressedF = false
         if (this.inputKeys.P.isUp) this.pressedP = false
+        if (this.inputKeys.C.isUp) this.pressedC = false
+        if (this.inputKeys.V.isUp) this.pressedV = false
         if (this.inputKeys.SPACE.isUp) this.pressedSPACE = false
 
     }
-
-
 
 }
