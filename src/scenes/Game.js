@@ -47,6 +47,10 @@ export default class Game extends Phaser.Scene {
         this.load.image('button_steal','src/assets/buttons/Steal.png')
         this.load.image('button_flee','src/assets/buttons/Flee.png')
 
+        this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+
+
+
         // ----------------------------------------------------- CLASSES 
 
         Player.preload(this)
@@ -275,23 +279,31 @@ export default class Game extends Phaser.Scene {
         // ----------------------------------------------------- HEALTH BAR
 
         // change position if needed (but use same position for both images)
-        this.backgroundBar = this.add.image(this.player.x + 300, 20, 'redHealthBar');
+        this.backgroundBar = this.add.image(this.player.x + 300, 18, 'redHealthBar');
         this.backgroundBar.fixedToCamera = true;
 
-        this.healthBar = this.add.image(this.player.x + 300, 20, 'greenHealthBar');
+        this.healthBar = this.add.image(this.player.x + 300, 18, 'greenHealthBar');
         this.healthBar.fixedToCamera = true;
         this.healthBarWidth = this.healthBar.width;
 
+
+        WebFont.load({
+            google: {
+                families: [ 'VT323' ]
+            }});
+
+
         // add text label to left of bar
-        this.healthLabel = this.add.text(60, 12, 'Health', {fontSize:'20px', fill:'#ffffff'});
+        this.healthLabel = this.add.text(60, 12, 'Health', {fontFamily: 'VT323', fontSize:'20px', fill:'#ffffff'});
         this.healthLabel.fixedToCamera = true;
 
         // ----------------------------------------------------- XP
 
         this.player.xp = 0
-        this.xpLabel = this.add.text(0, 0, 'XP ' + this.player.xp, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
+        this.xpLabel = this.add.text(0, 0, 'XP ' + this.player.xp, {fontFamily: 'VT323', })
         this.xpLabel.setX(this.healthLabel.x + 200)
         this.xpLabel.setY(this.healthLabel.y)
+
 
         // ----------------------------------------------------- MUSIC
 
@@ -343,6 +355,24 @@ export default class Game extends Phaser.Scene {
         this.button_flee.on('pointerout', function(){})
         this.button_flee.on('pointerdown', function(){})   
 
+
+        // ----------------------------------------------------- Log Chat
+        this.LogChat1 = this.add.text(0, 0, '', {fontFamily: 'VT323', fontSize:'15px'})
+        this.LogChat1.setX(this.healthLabel.x - 320)
+        this.LogChat1.setY(this.healthLabel.y + 200)
+
+        this.LogChat2 = this.add.text(0, 0, '', {fontFamily: 'VT323', fontSize:'15px'})
+        this.LogChat2.setX(this.healthLabel.x - 320)
+        this.LogChat2.setY(this.healthLabel.y + 180)
+
+        this.LogChat3 = this.add.text(0, 0, '', {fontFamily: 'VT323', fontSize:'15px'})
+        this.LogChat3.setX(this.healthLabel.x - 320)
+        this.LogChat3.setY(this.healthLabel.y + 160)
+
+        this.LogChat4 = this.add.text(0, 0, '', {fontFamily: 'VT323', fontSize:'15px'})
+        this.LogChat4.setX(this.healthLabel.x - 320)
+        this.LogChat4.setY(this.healthLabel.y + 140)
+
     }
 
     update() {
@@ -360,19 +390,19 @@ export default class Game extends Phaser.Scene {
 
         // ----------------------------------------------------- UPDATE COUNTDOWN
 
-        this.countdown.update(this.player, this.enemy)
+        this.countdown.update(this.player, this.enemy, this.LogChat1, this.LogChat2, this.LogChat3, this.LogChat4)
 
         // ----------------------------------------------------- UPDATE HEALTH BAR
 
         this.healthBar.displayWidth = this.player.health / this.player.maxHealth * this.healthBarWidth;
         this.healthBar.setX(this.player.x  - (1 - this.player.health / this.player.maxHealth)/2 * this.healthBarWidth);
-        this.healthBar.setY(this.player.y + 170);
+        this.healthBar.setY(this.player.y + 160);
         
         this.backgroundBar.setX(this.player.x);
-        this.backgroundBar.setY(this.player.y + 170);
+        this.backgroundBar.setY(this.player.y + 160);
 
         this.healthLabel.setX(this.player.x - 25);
-        this.healthLabel.setY(this.player.y + 160);
+        this.healthLabel.setY(this.player.y + 150);
 
         // ----------------------------------------------------- UPDATE BUTTONS
 
@@ -399,6 +429,41 @@ export default class Game extends Phaser.Scene {
 
         this.xpLabel.setX(this.healthLabel.x + 140)
         this.xpLabel.setY(this.healthLabel.y)
+
+        // ----------------------------------------------------- UPDATE LOG CHAT
+        if(this.player.logArray != null){
+			for(let i = 0; i <4 ; i++ ){
+				if(i == 0){
+					this.LogChat1.text = this.player.logArray[this.player.logArray.length -1 ]
+                    this.LogChat1.setX(this.player.x -270)
+                    this.LogChat1.setY(this.player.y + 180)
+				}
+				else if(i == 1 ){
+					this.LogChat2.text = this.player.logArray[this.player.logArray.length -2 ]
+                    this.LogChat2.setX(this.player.x-270)
+                    this.LogChat2.setY(this.player.y+ 160)
+                
+				}				
+				else if(i == 2){
+					this.LogChat3.text = this.player.logArray[this.player.logArray.length -3 ]
+                    this.LogChat3.setX(this.player.x-270)
+                    this.LogChat3.setY(this.player.y+ 140)
+
+				}
+				if(i == 3){
+					this.LogChat4.text = this.player.logArray[this.player.logArray.length -4 ]
+                    this.LogChat4.setX(this.player.x-270)
+                    this.LogChat4.setY(this.player.y+ 120)
+
+				}
+			}
+		}else{
+			console.log('null');
+		}
+        
+
+        
+
 
     }
 
@@ -587,6 +652,15 @@ export default class Game extends Phaser.Scene {
         this.xpLabel.setX(this.healthLabel.x + 140)
         this.xpLabel.setY(this.healthLabel.y)
 
+    }
+
+    loadFont(name, url) {
+        var newFont = new FontFace(name, `url(${url})`);
+        newFont.load().then(function (loaded) {
+            document.fonts.add(loaded);
+        }).catch(function (error) {
+            return error;
+        });
     }
 
 }

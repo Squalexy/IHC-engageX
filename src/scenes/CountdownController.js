@@ -59,7 +59,7 @@ export default class CountdownController
 		}
 	}
 
-	update(player, enemy)
+	update(player, enemy, LogChat1,LogChat2, LogChat3, LogChat4 )
 	{
         if (!this.timerEvent || this.duration <= 0)
 		{
@@ -84,7 +84,8 @@ export default class CountdownController
         }else{
 			enemy.health = 100;
 		}
-
+		
+		
 		this.label.text = seconds.toFixed(2)
         this.label.setX(player.x);
         this.label.setY(player.y - 150);
