@@ -3,8 +3,6 @@ import Game from './scenes/Game.js'
 
 export default new Phaser.Game({
     type: Phaser.AUTO,
-    width: 1000,
-    height: 600,
     scene: [Game],
     parent: 'main',
     backgroundColor: '#1a1a2d',
@@ -12,8 +10,13 @@ export default new Phaser.Game({
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
+            debug: false
         },
     },
     autoCenter: true,
+    scale: {
+        mode: Phaser.Scale.FIT,
+        width: 800,
+        height: 600
+    }
 })

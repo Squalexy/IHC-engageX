@@ -10,21 +10,22 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         } = data
 
         super(scene, x, y, texture, frame)
+        
         scene.physics.add.existing(this)
         this.scene.add.existing(this)
 
     }
 
     static preload(scene) {
-
+        
         scene.load.spritesheet('sprite1', 'src/assets/sprites/sprite1/sprite1_anim.png', {
             frameWidth: 32,
             frameHeight: 32
         })
+
     }
 
     create(scene) {
-
 
         this.vision.scale = 0.4     // field of view range
         this.orientation = "right"  // direction the player is oriented, starts oriented looking on the right
@@ -155,12 +156,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
 
         // Run (maximum 5 tiles left or right)
-        if (this.inputKeys.F.isDown) {
+        if (this.inputKeys.SPACE.isDown) {
 
             this.anims.play('sprite1_flee', true)
 
             if (this.orientation == "left") {
-                if (!this.pressedF) {
+                if (!this.pressedSPACE) {
                     let pos = this.scene.layer.getTileAtWorldXY(this.x - 32, this.y, true)
                     for (let i = 1; i < 6; i++) {
                         if (pos.index == 5) break
@@ -172,10 +173,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                             pos = this.scene.layer.getTileAtWorldXY(this.x - 32, this.y, true)
                         }
                     }
-                    this.pressedF = true
+                    this.pressedSPACE = true
                 }
             } else if (this.orientation == "right") {
-                if (!this.pressedF) {
+                if (!this.pressedSPACE) {
                     let pos = this.scene.layer.getTileAtWorldXY(this.x + 32, this.y, true)
                     for (let i = 1; i < 6; i++) {
                         if (pos.index == 5) break
@@ -187,9 +188,22 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                             pos = this.scene.layer.getTileAtWorldXY(this.x + 32, this.y, true)
                         }
                     }
-                    this.pressedF = true
+                    this.pressedSPACE = true
                 }
             }
+        }
+
+        // Save
+        if (this.inputKeys.F.isDown) {
+            this.anims.play('sprite1_sow', true)
+            if (!this.pressedF) {
+                this.health -= this.health / 2
+                this.xp = Math.floor(this.xp + this.health / 2)
+                this.scene.xpLabel.setText('XP ' + this.xp)
+                this.scene.xpLabel.setX(this.scene.healthLabel.x + 140)
+                this.scene.xpLabel.setY(this.scene.healthLabel.y)
+            }
+            this.pressedF = true
         }
 
         if (this.inputKeys.Q.isUp) this.pressedQ = false
@@ -201,7 +215,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.inputKeys.R.isUp) this.pressedR = false
         if (this.inputKeys.F.isUp) this.pressedF = false
         if (this.inputKeys.P.isUp) this.pressedP = false
+        if (this.inputKeys.SPACE.isUp) this.pressedSPACE = false
 
     }
+
+
 
 }
