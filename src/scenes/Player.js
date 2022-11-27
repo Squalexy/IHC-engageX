@@ -10,24 +10,28 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         } = data
 
         super(scene, x, y, texture, frame)
+        
         scene.physics.add.existing(this)
         this.scene.add.existing(this)
 
     }
 
     static preload(scene) {
+        
 
         scene.load.spritesheet('sprite1', 'src/assets/sprites/sprite1/sprite1_anim.png', {
             frameWidth: 32,
             frameHeight: 32
         })
+
     }
 
     create(scene) {
 
-
         this.vision.scale = 0.4     // field of view range
         this.orientation = "right"  // direction the player is oriented, starts oriented looking on the right
+
+
 
     }
 
@@ -203,5 +207,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.inputKeys.P.isUp) this.pressedP = false
 
     }
+
+
 
 }
