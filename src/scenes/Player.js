@@ -120,7 +120,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.scene.sow_sound.isPlaying) this.scene.sow_sound.play()
 
             if (!this.pressedE) {
-                this.logArray.push('You Sow');
+                this.logArray.push('You used Sow');
 
                 for (const element of this.scene.tiles) {
                     if (element["value"].index != 5) {
@@ -141,7 +141,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
             if (!this.pressedR) {
 
-                this.logArray.push('You Harvest');
+                this.logArray.push('You used Harvest');
 
                 if (this.scene.tiles[8]["value"].index == 4) {
 
@@ -174,7 +174,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                         (this.scene.enemy.x == this.x + 32 && this.scene.enemy.y == this.y) ||
                         (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y + 32) ||
                         (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y - 32)){
-                            this.logArray.push('You Fight');
+                            this.logArray.push('You used Fight');
             
 
                         this.scene.enemy.health -= 10
@@ -202,6 +202,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
             this.anims.play('elf_flee', true)
             if (!this.scene.flee_sound.isPlaying) this.scene.flee_sound.play()
+            this.logArray.push('You used Flee');
 
             if (this.orientation == "left") {
                 if (!this.pressedSPACE) {
@@ -243,6 +244,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.scene.save_sound.isPlaying) this.scene.save_sound.play()
 
             if (!this.pressedF) {
+                this.logArray.push('You used Save');
+
                 this.health -= this.health / 2
                 this.xp = Math.floor(this.xp + this.health / 2)
                 this.scene.xpLabel.setText('XP ' + this.xp)
@@ -261,6 +264,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.scene.steal_sound.isPlaying) this.scene.steal_sound.play()
 
             if (!this.pressedC) {
+                this.logArray.push('You used Steal');
 
                 if (this.scene.enemy.active) {
 
@@ -303,13 +307,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.pressedV) {
 
                 if (this.scene.enemy.active) {
+                    
 
                     // Steal in 4 directions: left, right, up, down
                     if ((this.scene.enemy.x == this.x - 32 && this.scene.enemy.y == this.y) || 
                         (this.scene.enemy.x == this.x + 32 && this.scene.enemy.y == this.y) ||
                         (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y + 32) ||
                         (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y - 32)){
-
+                        this.logArray.push('You used Share');
                         this.anims.play('elf_share', true)
                         if (!this.scene.steal_sound.isPlaying) this.scene.steal_sound.play()
 

@@ -711,6 +711,7 @@ export default class Game extends Phaser.Scene {
 
         this.tiles = this.getTiles()
         if (this.tiles[8]["value"].index == 4) {
+            this.player.logArray.push('You used Harvest');
             let pointerTileX = this.map.worldToTileX(this.player.x)
             let pointerTileY = this.map.worldToTileY(this.player.y)
             this.map.putTileAt(1, pointerTileX, pointerTileY)
@@ -729,6 +730,8 @@ export default class Game extends Phaser.Scene {
 
         for (const element of this.tiles) {
             if (element["value"].index != 5) {
+                this.player.logArray.push('You used Sow');
+
                 let pointerTileX = this.map.worldToTileX(element["x"] + this.player.x)
                 let pointerTileY = this.map.worldToTileY(element["y"] + this.player.y)
                 this.map.putTileAt(4, pointerTileX, pointerTileY)
@@ -749,6 +752,7 @@ export default class Game extends Phaser.Scene {
                 (this.enemy.x == this.player.x + 32 && this.enemy.y == this.player.y) ||
                 (this.enemy.x == this.player.x && this.enemy.y == this.player.y + 32) ||
                 (this.enemy.x == this.player.x && this.enemy.y == this.player.y - 32)) {
+                    this.player.logArray.push('You used Fight');
 
                 this.enemy.health -= 10
 
@@ -770,6 +774,7 @@ export default class Game extends Phaser.Scene {
 
         this.player.anims.play('elf_flee', true)
         if (!this.flee_sound.isPlaying) this.flee_sound.play()
+        this.player.logArray.push('You used Flee');
 
         if (this.player.orientation == "left") {
 
@@ -803,6 +808,7 @@ export default class Game extends Phaser.Scene {
     }
 
     saveOnClick() {
+        this.player.logArray.push('You used Save');
 
         this.player.anims.play('elf_save', true)
         if (!this.save_sound.isPlaying) this.save_sound.play()
@@ -816,16 +822,11 @@ export default class Game extends Phaser.Scene {
     }
 
 
-    loadFont(name, url) {
-        var newFont = new FontFace(name, `url(${url})`);
-        newFont.load().then(function (loaded) {
-            document.fonts.add(loaded);
-        }).catch(function (error) {
-            return error;
-        });
-    }
+    
 
     stealOnClick() {
+
+        this.player.logArray.push('You used Steal');
 
         this.player.anims.play('elf_steal', true)
         if (!this.steal_sound.isPlaying) this.steal_sound.play()
@@ -874,6 +875,8 @@ export default class Game extends Phaser.Scene {
                 (this.enemy.x == this.player.x + 32 && this.enemy.y == this.player.y) ||
                 (this.enemy.x == this.player.x && this.enemy.y == this.player.y + 32) ||
                 (this.enemy.x == this.player.x && this.enemy.y == this.player.y - 32)){
+                this.player.logArray.push('You used Share');
+
 
                 this.player.anims.play('elf_share', true)
                 if (!this.steal_sound.isPlaying) this.steal_sound.play()
