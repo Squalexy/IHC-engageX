@@ -34,8 +34,19 @@ export default class Game extends Phaser.Scene {
         this.load.image('vision', 'src/assets/particles/fog.png')
         this.load.image('greenHealthBar', 'src/assets/healthBar/green_health_bar.png')
         this.load.image('redHealthBar', 'src/assets/healthBar/red_health_bar.png')
+
+        // ----------------------------------------------------- SOUND EFFECTS
+
         this.load.audio('music', 'src/assets/audio/music1.mp3')
         this.load.audio('loseGame', 'src/assets/audio/loseGame.wav')
+        this.load.audio('fight_sound', 'src/assets/audio/sfx/fight.wav')
+        this.load.audio('gain_life_sound', 'src/assets/audio/sfx/gain_life.wav')
+        this.load.audio('harvest_sound', 'src/assets/audio/sfx/harvest.wav')
+        this.load.audio('save_sound', 'src/assets/audio/sfx/save.wav')
+        this.load.audio('sow_sound', 'src/assets/audio/sfx/sow.wav')
+        this.load.audio('steal_sound', 'src/assets/audio/sfx/steal.wav')
+        this.load.audio('walk_sound', 'src/assets/audio/sfx/walk.wav')
+        this.load.audio('flee_sound', 'src/assets/audio/sfx/flee.wav')
 
         // ----------------------------------------------------- BUTTONS
 
@@ -120,7 +131,7 @@ export default class Game extends Phaser.Scene {
                 start: 21,
                 end: 23
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
         })
         .addFrame(this.anims.generateFrameNames('final_elf', {
@@ -138,7 +149,7 @@ export default class Game extends Phaser.Scene {
                 start: 21,
                 end: 23
             }),
-            repeat: -1,
+            repeat: 0,
             frameRate: 10
         })
         .addFrame(this.anims.generateFrameNames('final_elf', {
@@ -364,8 +375,8 @@ export default class Game extends Phaser.Scene {
         this.healthLabel = this.add.text(60, 12, 'Health', {
             fontSize: '20px',
             fill: '#ffffff'
-        });
-        this.healthLabel.fixedToCamera = true;
+        })
+        this.healthLabel.fixedToCamera = true
 
         // ----------------------------------------------------- XP
 
@@ -376,13 +387,28 @@ export default class Game extends Phaser.Scene {
         this.xpLabel.setX(this.healthLabel.x + 200)
         this.xpLabel.setY(this.healthLabel.y)
 
-        // ----------------------------------------------------- MUSIC
+        // ----------------------------------------------------- MUSIC & SOUND
 
-        this.music = this.sound.add("music", {
-            loop: true
-        });
-        //game.sound.setDecodedCallback(music, start, this);
+        this.music = this.sound.add("music", {loop: true});
+        //game.sound.setDecodedCallback(music, start, this)
         this.music.play()
+
+        this.fight_sound = this.sound.add("fight_sound", { loop: false });
+        this.gain_life_sound = this.sound.add("gain_life_sound", { loop: false });
+        this.harvest_sound = this.sound.add("harvest_sound", { loop: false });
+        this.save_sound = this.sound.add("save_sound", { loop: false });
+        this.sow_sound = this.sound.add("sow_sound", { loop: false });
+        this.steal_sound = this.sound.add("steal_sound", { loop: false });
+        this.walk_sound = this.sound.add("walk_sound", { loop: false })
+        this.flee_sound = this.sound.add("flee_sound", { loop: false });
+
+        this.music.setVolume(0.35)
+        this.walk_sound.setVolume(4)
+        this.flee_sound.setVolume(0.15)
+        this.steal_sound.setVolume(3)
+        this.harvest_sound.setVolume(1.5)
+        this.sow_sound.setVolume(1.5)
+        this.save_sound.setVolume(1.5)
 
         // ----------------------------------------------------- BUTTONS CREATION 
 
@@ -536,10 +562,9 @@ export default class Game extends Phaser.Scene {
         }).setOrigin(0.5)
 
         this.music.stop()
-        this.loseGame = this.sound.add("loseGame", {
-            volume: 0.4,
-            loop: false
-        });
+        this.loseGame = this.sound.add("loseGame", {loop: false});
+        this.loseGame.setVolume(0.15) 
+
         //game.sound.setDecodedCallback(music, start, this);
         this.loseGame.play()
         this.scene.pause()
@@ -609,19 +634,25 @@ export default class Game extends Phaser.Scene {
 
     harvestOnClick() {
 
-        this.player.anims.play('sprite1_sow', true)
+        this.player.anims.play('elf_harvest', true)
+        if (!this.harvest_sound.isPlaying) this.harvest_sound.play()
+
         this.tiles = this.getTiles()
         if (this.tiles[8]["value"].index == 4) {
             let pointerTileX = this.map.worldToTileX(this.player.x)
             let pointerTileY = this.map.worldToTileY(this.player.y)
             this.map.putTileAt(1, pointerTileX, pointerTileY)
+
+            if (!this.gain_life_sound.isPlaying) this.gain_life_sound.play()
             this.player.health += 15
         }
     }
 
     sowOnClick() {
 
-        this.player.anims.play('sprite1_sow', true)
+        this.player.anims.play('elf_sow', true)
+        if (!this.sow_sound.isPlaying) this.sow_sound.play()
+
         this.tiles = this.getTiles()
 
         for (const element of this.tiles) {
@@ -636,7 +667,9 @@ export default class Game extends Phaser.Scene {
 
     fightOnClick() {
 
-        this.player.anims.play('sprite1_attack', true)
+        this.player.anims.play('elf_fight', true)
+        if (!this.fight_sound.isPlaying) this.fight_sound.play()
+
 
         if (this.enemy.active) {
             // Attack in 4 directions: left, right, up, down
@@ -663,7 +696,8 @@ export default class Game extends Phaser.Scene {
 
     fleeOnClick() {
 
-        this.player.anims.play('sprite1_flee', true)
+        this.player.anims.play('elf_flee', true)
+        if (!this.flee_sound.isPlaying) this.flee_sound.play()
 
         if (this.player.orientation == "left") {
 
@@ -698,7 +732,8 @@ export default class Game extends Phaser.Scene {
 
     saveOnClick() {
 
-        this.player.anims.play('sprite1_sow', true)
+        this.player.anims.play('elf_save', true)
+        if (!this.save_sound.isPlaying) this.save_sound.play()
 
         this.player.health -= this.player.health / 2
         this.player.xp = Math.floor(this.player.xp + this.player.health / 2)
@@ -710,7 +745,8 @@ export default class Game extends Phaser.Scene {
 
     stealOnClick() {
 
-        this.player.anims.play('sprite1_sow', true)
+        this.player.anims.play('elf_steal', true)
+        if (!this.steal_sound.isPlaying) this.steal_sound.play()
 
         if (this.enemy.active) {
 
@@ -737,6 +773,8 @@ export default class Game extends Phaser.Scene {
                             this.enemy.destroy()
                         }, 500) 
                     }
+
+                    if (!this.gain_life_sound.isPlaying) this.gain_life_sound.play()
                     this.player.health += 10
                 }
             }
@@ -747,39 +785,45 @@ export default class Game extends Phaser.Scene {
 
     shareOnClick() {
 
-        this.player.anims.play('sprite1_sow', true)
+        this.player.anims.play('elf_share', true)
 
-            if (this.enemy.active) {
+        if (!this.steal_sound.isPlaying) this.steal_sound.play()
 
-                // Steal in 4 directions: left, right, up, down
-                if ((this.enemy.x == this.player.x - 32 && this.enemy.y == this.player.y) || 
-                    (this.enemy.x == this.player.x + 32 && this.enemy.y == this.player.y) ||
-                    (this.enemy.x == this.player.x && this.enemy.y == this.player.y + 32) ||
-                    (this.enemy.x == this.player.x && this.enemy.y == this.player.y - 32)){
+        if (this.enemy.active) {
 
-                    var healthPlayerNow = this.player.health
-                    var healthEnemyNow = this.enemy.health
+            // Steal in 4 directions: left, right, up, down
+            if ((this.enemy.x == this.player.x - 32 && this.enemy.y == this.player.y) || 
+                (this.enemy.x == this.player.x + 32 && this.enemy.y == this.player.y) ||
+                (this.enemy.x == this.player.x && this.enemy.y == this.player.y + 32) ||
+                (this.enemy.x == this.player.x && this.enemy.y == this.player.y - 32)){
 
-                    this.player.health -= healthPlayerNow / 2
-                    this.player.health += healthEnemyNow / 2
+                if (!this.gain_life_sound.isPlaying) this.gain_life_sound.play()
 
-                    this.enemy.health -= healthEnemyNow / 2
-                    this.enemy.health += healthPlayerNow  / 2
+                const healthPlayerNow = this.player.health
+                const healthEnemyNow = this.enemy.health
 
-                    if (this.enemy.health > 0) this.enemy.anims.play('enemy1_hurt', true)
-                    else {
-                        this.active = false
-                        this.enemy.anims.play('enemy1_death', true)
+                this.player.health -= healthPlayerNow / 2
+                this.player.health += healthEnemyNow / 2
 
-                        // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
-                        setTimeout(() => {
-                            this.enemy.destroy()
-                        }, 500) 
-                    }
-                    this.player.health += 10
-                    
+                this.enemy.health -= healthEnemyNow / 2
+                this.enemy.health += healthPlayerNow  / 2
+
+                if (this.enemy.health > 0) this.enemy.anims.play('enemy1_hurt', true)
+                else {
+                    this.active = false
+                    this.enemy.anims.play('enemy1_death', true)
+
+                    // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
+                    setTimeout(() => {
+                        this.enemy.destroy()
+                    }, 500) 
                 }
+
+                if (!this.gain_life_sound.isPlaying) this.gain_life_sound.play()
+                this.player.health += 10
+                
             }
+        }
         
     }
 
