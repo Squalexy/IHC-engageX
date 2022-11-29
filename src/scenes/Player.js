@@ -18,7 +18,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     static preload(scene) {
         
-        scene.load.spritesheet('sprite1', 'src/assets/sprites/sprite1/sprite1_anim.png', {
+        scene.load.spritesheet('final_elf', 'src/assets/sprites/final_elf/final_elf.png', {
             frameWidth: 32,
             frameHeight: 32
         })
@@ -34,11 +34,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(scene) {
 
-        if (!this.anims.isPlaying) this.anims.play('sprite1_idle', true)
+        if (!this.anims.isPlaying) this.anims.play('elf_idle', true)
 
         // Left
         if (this.inputKeys.left.isDown) {
-            this.anims.play('sprite1_walk', true)
+            this.anims.play('elf_walking', true)
             if (!this.pressedLeft && this.scene.tiles[0]["value"].index !== 5) {
                 this.x -= 32
                 this.scaleX = -1
@@ -51,7 +51,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Right
         if (this.inputKeys.right.isDown) {
-            this.anims.play('sprite1_walk', true)
+            this.anims.play('elf_walking', true)
             if (!this.pressedRight && this.scene.tiles[1]["value"].index !== 5) {
                 this.x += 32
                 this.body.offset.x = 0
@@ -64,7 +64,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         //  Down
         if (this.inputKeys.down.isDown) {
-            this.anims.play('sprite1_walk', true)
+            this.anims.play('elf_walking', true)
             if (!this.pressedDown && this.scene.tiles[2]["value"].index !== 5) {
                 this.y += 32
                 this.vision.y += 32
@@ -74,7 +74,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         //  Up
         if (this.inputKeys.up.isDown && this.scene.tiles[3]["value"].index !== 5) {
-            this.anims.play('sprite1_walk', true)
+            this.anims.play('elf_walking', true)
             if (!this.pressedUp) {
                 this.y -= 32
                 this.vision.y -= 32
@@ -93,7 +93,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Sow
         if (this.inputKeys.E.isDown) {
-            this.anims.play('sprite1_sow', true)
+            this.anims.play('elf_sow', true)
             if (!this.pressedE) {
                 for (const element of this.scene.tiles) {
                     if (element["value"].index != 5) {
@@ -109,9 +109,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Harvest
         if (this.inputKeys.R.isDown) {
-            this.anims.play('sprite1_sow', true)
+
             if (!this.pressedR) {
+                
                 if (this.scene.tiles[8]["value"].index == 4) {
+
+                    this.anims.play('elf_harvest', true)
+
                     let pointerTileX = this.scene.map.worldToTileX(this.x)
                     let pointerTileY = this.scene.map.worldToTileY(this.y)
                     this.scene.map.putTileAt(1, pointerTileX, pointerTileY)
@@ -124,7 +128,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Fight
         if (this.inputKeys.P.isDown) {
 
-            this.anims.play('sprite1_attack', true)
+            this.anims.play('elf_fight', true)
 
             if (!this.pressedP) {
                 if (this.scene.enemy.active) {
@@ -158,7 +162,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Run (maximum 5 tiles left or right)
         if (this.inputKeys.SPACE.isDown) {
 
-            this.anims.play('sprite1_flee', true)
+            this.anims.play('elf_flee', true)
 
             if (this.orientation == "left") {
                 if (!this.pressedSPACE) {
@@ -195,7 +199,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Save
         if (this.inputKeys.F.isDown) {
-            this.anims.play('sprite1_sow', true)
+            this.anims.play('elf_save', true)
             if (!this.pressedF) {
                 this.health -= this.health / 2
                 this.xp = Math.floor(this.xp + this.health / 2)
@@ -209,7 +213,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Steal
         if (this.inputKeys.C.isDown) {
 
-            this.anims.play('sprite1_sow', true)
+            this.anims.play('elf_steal', true)
 
             if (!this.pressedC) {
 
@@ -249,8 +253,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Share
         if (this.inputKeys.V.isDown) {
 
-            this.anims.play('sprite1_sow', true)
-
             if (!this.pressedV) {
 
                 if (this.scene.enemy.active) {
@@ -260,6 +262,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                         (this.scene.enemy.x == this.x + 32 && this.scene.enemy.y == this.y) ||
                         (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y + 32) ||
                         (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y - 32)){
+
+                        this.anims.play('elf_share', true)
 
                         var healthPlayerNow = this.health
                         var healthEnemyNow = this.scene.enemy.health

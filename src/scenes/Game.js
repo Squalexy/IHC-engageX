@@ -70,9 +70,10 @@ export default class Game extends Phaser.Scene {
             scene: this,
             x: 32 + 16,
             y: 32 + 16,
-            texture: 'sprite1',
-            frame: 'sprite1_idle'
+            texture: 'final_elf',
+            frame: 'elf_idle'
         })
+
         this.enemy = new Enemy({
             scene: this,
             x: 32 * 5 + 16,
@@ -90,49 +91,23 @@ export default class Game extends Phaser.Scene {
         // ------------------------------------ PLAYER
 
         this.anims.create({
-            key: 'sprite1_death',
-            frames: this.anims.generateFrameNumbers('sprite1', {
-                start: 0,
-                end: 7
+            key: 'elf_fight',
+            frames: this.anims.generateFrameNumbers('final_elf', {
+                start: 42,
+                end: 43
             }),
             repeat: 0,
             frameRate: 10
         })
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 49,
+            end: 50
+        }))
 
         this.anims.create({
-            key: 'sprite1_attack',
-            frames: this.anims.generateFrameNumbers('sprite1', {
-                start: 16,
-                end: 21
-            }),
-            repeat: 0,
-            frameRate: 10
-        })
-
-        this.anims.create({
-            key: 'sprite1_flee',
-            frames: this.anims.generateFrameNumbers('sprite1', {
-                start: 24,
-                end: 29
-            }),
-            repeat: 0,
-            frameRate: 10
-        })
-
-        this.anims.create({
-            key: 'sprite1_sow',
-            frames: this.anims.generateFrameNumbers('sprite1', {
-                start: 32,
-                end: 37
-            }),
-            repeat: 0,
-            frameRate: 10
-        })
-
-        this.anims.create({
-            key: 'sprite1_walk',
-            frames: this.anims.generateFrameNumbers('sprite1', {
-                start: 40,
+            key: 'elf_flee',
+            frames: this.anims.generateFrameNumbers('final_elf', {
+                start: 44,
                 end: 45
             }),
             repeat: 0,
@@ -140,34 +115,118 @@ export default class Game extends Phaser.Scene {
         })
 
         this.anims.create({
-            key: 'sprite1_hurt',
-            frames: this.anims.generateFrameNumbers('sprite1', {
-                start: 48,
-                end: 51
+            key: 'elf_harvest',
+            frames: this.anims.generateFrameNumbers('final_elf', {
+                start: 21,
+                end: 23
+            }),
+            repeat: -1,
+            frameRate: 10
+        })
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 28,
+            end: 30
+        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 35,
+            end: 35
+        }))
+
+        this.anims.create({
+            key: 'elf_share',
+            frames: this.anims.generateFrameNumbers('final_elf', {
+                start: 21,
+                end: 23
+            }),
+            repeat: -1,
+            frameRate: 10
+        })
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 28,
+            end: 30
+        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 35,
+            end: 35
+        }))
+
+        this.anims.create({
+            key: 'elf_idle',
+            frames: this.anims.generateFrameNumbers('final_elf', {
+                start: 51,
+                end: 52
+            }),
+            repeat: -1,
+            frameRate: 5
+        })
+
+        this.anims.create({
+            key: 'elf_save',
+            frames: this.anims.generateFrameNumbers('final_elf', {
+                start: 24,
+                end: 26
             }),
             repeat: 0,
             frameRate: 10
         })
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 31,
+            end: 33
+        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 38,
+            end: 39
+        }))
 
         this.anims.create({
-            key: 'sprite1_idle',
-            frames: this.anims.generateFrameNumbers('sprite1', {
-                start: 52,
-                end: 55
+            key: 'elf_sow',
+            frames: this.anims.generateFrameNumbers('final_elf', {
+                start: 4,
+                end: 6
+            }),
+            repeat: 0,
+            frameRate: 10
+        })
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 11,
+            end: 13
+        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 18,
+            end: 18
+        }))
+
+        this.anims.create({
+            key: 'elf_steal',
+            frames: this.anims.generateFrameNumbers('final_elf', {
+                start: 0,
+                end: 4
             }),
             repeat: 0,
             frameRate: 8
         })
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 7,
+            end: 9
+        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 14,
+            end: 16
+        }))
 
         this.anims.create({
-            key: 'sprite1_steal',
-            frames: this.anims.generateFrameNumbers('sprite1', {
-                start: 56,
-                end: 59
+            key: 'elf_walking',
+            frames: this.anims.generateFrameNumbers('final_elf', {
+                start: 46,
+                end: 47
             }),
             repeat: 0,
             frameRate: 10
         })
+        .addFrame(this.anims.generateFrameNames('final_elf', {
+            start: 53,
+            end: 54
+        }))
 
         // ------------------------------------ ENEMY
 
