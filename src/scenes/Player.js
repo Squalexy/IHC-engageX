@@ -13,7 +13,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         
         scene.physics.add.existing(this)
         this.scene.add.existing(this)
-
+        this.logArray = [];
     }
 
     static preload(scene) {
@@ -41,10 +41,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Left
         if (this.inputKeys.left.isDown) {
 
+
             this.anims.play('elf_walking', true)
             if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
 
             if (!this.pressedLeft && this.scene.tiles[0]["value"].index !== 5) {
+                this.logArray.push('You Moved');
                 this.x -= 32
                 this.scaleX = -1
                 this.body.offset.x = 32
@@ -61,6 +63,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
 
             if (!this.pressedRight && this.scene.tiles[1]["value"].index !== 5) {
+                this.logArray.push('You Moved');
+
                 this.x += 32
                 this.body.offset.x = 0
                 this.scaleX = 1
@@ -77,6 +81,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
 
             if (!this.pressedDown && this.scene.tiles[2]["value"].index !== 5) {
+                this.logArray.push('You Moved');
+
                 this.y += 32
                 this.vision.y += 32
                 this.pressedDown = true
@@ -90,6 +96,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
 
             if (!this.pressedUp) {
+                this.logArray.push('You Moved');
+
                 this.y -= 32
                 this.vision.y -= 32
                 this.pressedUp = true
@@ -112,6 +120,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.scene.sow_sound.isPlaying) this.scene.sow_sound.play()
 
             if (!this.pressedE) {
+                this.logArray.push('You Sow');
+
                 for (const element of this.scene.tiles) {
                     if (element["value"].index != 5) {
                         let pointerTileX = this.scene.map.worldToTileX(element["x"] + this.x)
@@ -130,6 +140,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.scene.harvest_sound.isPlaying) this.scene.harvest_sound.play()
 
             if (!this.pressedR) {
+
+                this.logArray.push('You Harvest');
 
                 if (this.scene.tiles[8]["value"].index == 4) {
 
@@ -162,6 +174,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                         (this.scene.enemy.x == this.x + 32 && this.scene.enemy.y == this.y) ||
                         (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y + 32) ||
                         (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y - 32)){
+                            this.logArray.push('You Fight');
+            
 
                         this.scene.enemy.health -= 10
                         if (this.scene.enemy.health > 0) this.scene.enemy.anims.play('enemy1_hurt', true)

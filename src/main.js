@@ -5,18 +5,18 @@ export default new Phaser.Game({
     type: Phaser.AUTO,
     scene: [Game],
     parent: 'main',
-    backgroundColor: '#1a1a2d',
+    backgroundColor: '#241A0B',
     pixelArt: true,
     physics: {
         default: 'arcade',
         arcade: {
-            debug: false
+            debug: false    
         },
     },
     autoCenter: true,
     scale: {
         mode: Phaser.Scale.FIT,
-        width: 800,
-        height: 600
+            width: 800,
+            height: 600
     }
 })
