@@ -34,18 +34,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(scene) {
 
-
+        const obstacles = [17, 18, 19, 20, 21, 25, 26, 27, 28, 29, 30, 31]
+        const cannot_sow = [17, 18, 19, 20, 21, 25, 26, 27, 28, 29, 30, 31, 32]
 
         if (!this.anims.isPlaying) this.anims.play('elf_idle', true)
 
         // Left
         if (this.inputKeys.left.isDown) {
 
-
             this.anims.play('elf_walking', true)
             if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
 
-            if (!this.pressedLeft && this.scene.tiles[0]["value"].index !== 5) {
+            if (!this.pressedLeft && !obstacles.includes(this.scene.tiles[0]["value"].index)) {
                 this.logArray.push('You Moved');
                 this.x -= 32
                 this.scaleX = -1
@@ -53,6 +53,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 this.vision.x -= 32
                 this.pressedLeft = true
                 this.orientation = "left"
+                console.log("Index: " + this.scene.tiles[0]["value"].index)
             }
         }
 
@@ -62,7 +63,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.anims.play('elf_walking', true)
             if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
 
-            if (!this.pressedRight && this.scene.tiles[1]["value"].index !== 5) {
+            if (!this.pressedRight && !obstacles.includes(this.scene.tiles[1]["value"].index)) {
                 this.logArray.push('You Moved');
 
                 this.x += 32
@@ -71,6 +72,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 this.vision.x += 32
                 this.pressedRight = true
                 this.orientation = "right"
+                console.log("Index: " + this.scene.tiles[1]["value"].index)
             }
         }
 
@@ -80,7 +82,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.anims.play('elf_walking', true)
             if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
 
-            if (!this.pressedDown && this.scene.tiles[2]["value"].index !== 5) {
+            if (!this.pressedDown && !obstacles.includes(this.scene.tiles[2]["value"].index)) {
                 this.logArray.push('You Moved');
 
                 this.y += 32
@@ -90,7 +92,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         //  Up
-        if (this.inputKeys.up.isDown && this.scene.tiles[3]["value"].index !== 5) {
+        if (this.inputKeys.up.isDown && !obstacles.includes(this.scene.tiles[3]["value"].index)) {
 
             this.anims.play('elf_walking', true)
             if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
@@ -123,10 +125,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 this.logArray.push('You used Sow');
 
                 for (const element of this.scene.tiles) {
-                    if (element["value"].index != 5) {
+                    if (!cannot_sow.includes(element["value"].index)) {
                         let pointerTileX = this.scene.map.worldToTileX(element["x"] + this.x)
                         let pointerTileY = this.scene.map.worldToTileY(element["y"] + this.y)
-                        this.scene.map.putTileAt(4, pointerTileX, pointerTileY)
+                        this.scene.map.putTileAt(24, pointerTileX, pointerTileY)
                         this.health -= 1
                     }
                 }
@@ -143,7 +145,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
                 this.logArray.push('You used Harvest');
 
-                if (this.scene.tiles[8]["value"].index == 4) {
+                if (this.scene.tiles[8]["value"].index == 24) {
 
                     this.anims.play('elf_harvest', true)
 
@@ -151,7 +153,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
                     let pointerTileX = this.scene.map.worldToTileX(this.x)
                     let pointerTileY = this.scene.map.worldToTileY(this.y)
-                    this.scene.map.putTileAt(1, pointerTileX, pointerTileY)
+                    this.scene.map.putTileAt(22, pointerTileX, pointerTileY)
 
                     if (!this.scene.gain_life_sound.isPlaying) this.scene.gain_life_sound.play()
                     this.health += 15
@@ -208,7 +210,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 if (!this.pressedSPACE) {
                     let pos = this.scene.layer.getTileAtWorldXY(this.x - 32, this.y, true)
                     for (let i = 1; i < 6; i++) {
-                        if (pos.index == 5) break
+                        if (obstacles.includes(pos.index)) break
                         else {
                             this.x -= 32
                             this.body.offset.x = 32
@@ -223,7 +225,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 if (!this.pressedSPACE) {
                     let pos = this.scene.layer.getTileAtWorldXY(this.x + 32, this.y, true)
                     for (let i = 1; i < 6; i++) {
-                        if (pos.index == 5) break
+                        if (obstacles.includes(pos.index)) break
                         else {
                             this.x += 32
                             this.body.offset.x = 0

@@ -26,8 +26,8 @@ export default class Game extends Phaser.Scene {
 
         // ----------------------------------------------------- TILEMAP  
 
-        this.load.image('tiles', 'src/assets/tiles/desert.png')
-        this.load.tilemapTiledJSON('map', 'src/assets/tiles/map1.json')
+        this.load.image('tiles', 'src/assets/tiles/tilesetv1.png')
+        this.load.tilemapTiledJSON('map', 'src/assets/tiles/map_forest.json')
 
         // ----------------------------------------------------- ASSETS 
 
@@ -80,15 +80,15 @@ export default class Game extends Phaser.Scene {
         this.map = this.make.tilemap({
             key: 'map'
         })
-        const tileset = this.map.addTilesetImage('desert', 'tiles', 32, 32)
+        const tileset = this.map.addTilesetImage('tilesetv1', 'tiles', 32, 32)
         this.layer = this.map.createLayer('toplayer', tileset, 0, 0)
 
         // ----------------------------------------------------- SPRITES CREATION 
 
         this.player = new Player({
             scene: this,
-            x: 32 + 16,
-            y: 32 + 16,
+            x: 32 + 16 * 3,
+            y: 32 + 16 * 3,
             texture: 'final_elf',
             frame: 'elf_idle'
         })
@@ -706,15 +706,17 @@ export default class Game extends Phaser.Scene {
 
     harvestOnClick() {
 
-        this.player.anims.play('elf_harvest', true)
+
         if (!this.harvest_sound.isPlaying) this.harvest_sound.play()
 
         this.tiles = this.getTiles()
-        if (this.tiles[8]["value"].index == 4) {
+        if (this.tiles[8]["value"].index == 24) {
+
+            this.player.anims.play('elf_harvest', true)
             this.player.logArray.push('You used Harvest');
             let pointerTileX = this.map.worldToTileX(this.player.x)
             let pointerTileY = this.map.worldToTileY(this.player.y)
-            this.map.putTileAt(1, pointerTileX, pointerTileY)
+            this.map.putTileAt(22, pointerTileX, pointerTileY)
 
             if (!this.gain_life_sound.isPlaying) this.gain_life_sound.play()
             this.player.health += 15
@@ -723,18 +725,20 @@ export default class Game extends Phaser.Scene {
 
     sowOnClick() {
 
+        const cannot_sow = [17, 18, 19, 20, 21, 25, 26, 27, 28, 29, 30, 31, 32]
+
         this.player.anims.play('elf_sow', true)
         if (!this.sow_sound.isPlaying) this.sow_sound.play()
 
         this.tiles = this.getTiles()
 
         for (const element of this.tiles) {
-            if (element["value"].index != 5) {
+            if (!cannot_sow.includes(element["value"].index)) {
                 this.player.logArray.push('You used Sow');
 
                 let pointerTileX = this.map.worldToTileX(element["x"] + this.player.x)
                 let pointerTileY = this.map.worldToTileY(element["y"] + this.player.y)
-                this.map.putTileAt(4, pointerTileX, pointerTileY)
+                this.map.putTileAt(24, pointerTileX, pointerTileY)
                 this.player.health -= 1
             }
         }
@@ -772,6 +776,8 @@ export default class Game extends Phaser.Scene {
 
     fleeOnClick() {
 
+        const obstacles = [17, 18, 19, 20, 21, 25, 26, 27, 28, 29, 30, 31]
+
         this.player.anims.play('elf_flee', true)
         if (!this.flee_sound.isPlaying) this.flee_sound.play()
         this.player.logArray.push('You used Flee');
@@ -780,7 +786,7 @@ export default class Game extends Phaser.Scene {
 
             let pos = this.layer.getTileAtWorldXY(this.player.x - 32, this.player.y, true)
             for (let i = 1; i < 6; i++) {
-                if (pos.index == 5) break
+                if (obstacles.includes(pos.index)) break
                 else {
                     this.player.x -= 32
                     this.player.body.offset.x = 32
@@ -795,7 +801,7 @@ export default class Game extends Phaser.Scene {
             let pos = this.layer.getTileAtWorldXY(this.player.x + 32, this.player.y, true)
 
             for (let i = 1; i < 6; i++) {
-                if (pos.index == 5) break
+                if (obstacles.includes(pos.index)) break
                 else {
                     this.player.x += 32
                     this.player.body.offset.x = 0
