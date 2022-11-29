@@ -18,7 +18,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     static preload(scene) {
         
-        scene.load.spritesheet('sprite1', 'src/assets/sprites/sprite1/sprite1_anim.png', {
+        scene.load.spritesheet('final_elf', 'src/assets/sprites/final_elf/final_elf.png', {
             frameWidth: 32,
             frameHeight: 32
         })
@@ -34,11 +34,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(scene) {
 
-        if (!this.anims.isPlaying) this.anims.play('sprite1_idle', true)
+
+
+        if (!this.anims.isPlaying) this.anims.play('elf_idle', true)
 
         // Left
         if (this.inputKeys.left.isDown) {
-            this.anims.play('sprite1_walk', true)
+
+            this.anims.play('elf_walking', true)
+            if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
+
             if (!this.pressedLeft && this.scene.tiles[0]["value"].index !== 5) {
                 this.x -= 32
                 this.scaleX = -1
@@ -51,7 +56,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Right
         if (this.inputKeys.right.isDown) {
-            this.anims.play('sprite1_walk', true)
+
+            this.anims.play('elf_walking', true)
+            if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
+
             if (!this.pressedRight && this.scene.tiles[1]["value"].index !== 5) {
                 this.x += 32
                 this.body.offset.x = 0
@@ -64,7 +72,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         //  Down
         if (this.inputKeys.down.isDown) {
-            this.anims.play('sprite1_walk', true)
+
+            this.anims.play('elf_walking', true)
+            if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
+
             if (!this.pressedDown && this.scene.tiles[2]["value"].index !== 5) {
                 this.y += 32
                 this.vision.y += 32
@@ -74,7 +85,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         //  Up
         if (this.inputKeys.up.isDown && this.scene.tiles[3]["value"].index !== 5) {
-            this.anims.play('sprite1_walk', true)
+
+            this.anims.play('elf_walking', true)
+            if (!this.scene.walk_sound.isPlaying) this.scene.walk_sound.play()
+
             if (!this.pressedUp) {
                 this.y -= 32
                 this.vision.y -= 32
@@ -93,7 +107,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Sow
         if (this.inputKeys.E.isDown) {
-            this.anims.play('sprite1_sow', true)
+
+            this.anims.play('elf_sow', true)
+            if (!this.scene.sow_sound.isPlaying) this.scene.sow_sound.play()
+
             if (!this.pressedE) {
                 for (const element of this.scene.tiles) {
                     if (element["value"].index != 5) {
@@ -109,12 +126,22 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Harvest
         if (this.inputKeys.R.isDown) {
-            this.anims.play('sprite1_sow', true)
+
+            if (!this.scene.harvest_sound.isPlaying) this.scene.harvest_sound.play()
+
             if (!this.pressedR) {
+
                 if (this.scene.tiles[8]["value"].index == 4) {
+
+                    this.anims.play('elf_harvest', true)
+
+                    if (!this.scene.gain_life_sound.isPlaying) this.scene.gain_life_sound.play()
+
                     let pointerTileX = this.scene.map.worldToTileX(this.x)
                     let pointerTileY = this.scene.map.worldToTileY(this.y)
                     this.scene.map.putTileAt(1, pointerTileX, pointerTileY)
+
+                    if (!this.scene.gain_life_sound.isPlaying) this.scene.gain_life_sound.play()
                     this.health += 15
                 }
             }
@@ -124,7 +151,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Fight
         if (this.inputKeys.P.isDown) {
 
-            this.anims.play('sprite1_attack', true)
+            this.anims.play('elf_fight', true)
+            if (!this.scene.fight_sound.isPlaying) this.scene.fight_sound.play()
 
             if (!this.pressedP) {
                 if (this.scene.enemy.active) {
@@ -155,10 +183,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
 
-        // Run (maximum 5 tiles left or right)
+        // Flee (maximum 5 tiles left or right)
         if (this.inputKeys.SPACE.isDown) {
 
-            this.anims.play('sprite1_flee', true)
+            this.anims.play('elf_flee', true)
+            if (!this.scene.flee_sound.isPlaying) this.scene.flee_sound.play()
 
             if (this.orientation == "left") {
                 if (!this.pressedSPACE) {
@@ -195,7 +224,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Save
         if (this.inputKeys.F.isDown) {
-            this.anims.play('sprite1_sow', true)
+
+            this.anims.play('elf_save', true)
+            if (!this.scene.save_sound.isPlaying) this.scene.save_sound.play()
+
             if (!this.pressedF) {
                 this.health -= this.health / 2
                 this.xp = Math.floor(this.xp + this.health / 2)
@@ -203,9 +235,100 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 this.scene.xpLabel.setX(this.scene.healthLabel.x + 140)
                 this.scene.xpLabel.setY(this.scene.healthLabel.y)
             }
+
             this.pressedF = true
+
         }
 
+        // Steal
+        if (this.inputKeys.C.isDown) {
+
+            this.anims.play('elf_steal', true)
+            if (!this.scene.steal_sound.isPlaying) this.scene.steal_sound.play()
+
+            if (!this.pressedC) {
+
+                if (this.scene.enemy.active) {
+
+                    // Steal in 4 directions: left, right, up, down
+                    if ((this.scene.enemy.x == this.x - 32 && this.scene.enemy.y == this.y) || 
+                        (this.scene.enemy.x == this.x + 32 && this.scene.enemy.y == this.y) ||
+                        (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y + 32) ||
+                        (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y - 32)){
+
+                        const probability = Math.floor(Math.random() * 100)
+                        console.log(probability)
+
+                        if (probability < 25) {
+
+                            this.scene.enemy.health -= 10
+
+                            if (this.scene.enemy.health > 0) this.scene.enemy.anims.play('enemy1_hurt', true)
+                            else {
+                                this.scene.active = false
+                                this.scene.enemy.anims.play('enemy1_death', true)
+    
+                                // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
+                                setTimeout(() => {
+                                    this.scene.enemy.destroy()
+                                }, 500) 
+                            }
+
+                            if (!this.scene.gain_life_sound.isPlaying) this.scene.gain_life_sound.play()
+                            this.health += 10
+                        }
+                    }
+                }
+            }
+            this.pressedC = true
+        }
+
+        // Share
+        if (this.inputKeys.V.isDown) {
+
+            if (!this.scene.steal_sound.isPlaying) this.scene.steal_sound.play()
+
+            if (!this.pressedV) {
+
+                if (this.scene.enemy.active) {
+
+                    // Steal in 4 directions: left, right, up, down
+                    if ((this.scene.enemy.x == this.x - 32 && this.scene.enemy.y == this.y) || 
+                        (this.scene.enemy.x == this.x + 32 && this.scene.enemy.y == this.y) ||
+                        (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y + 32) ||
+                        (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y - 32)){
+
+                        this.anims.play('elf_share', true)
+
+                        const healthPlayerNow = this.health
+                        const healthEnemyNow = this.scene.enemy.health
+
+                        this.health -= healthPlayerNow / 2
+                        this.health += healthEnemyNow / 2
+ 
+                        this.scene.enemy.health -= healthEnemyNow / 2
+                        this.scene.enemy.health += healthPlayerNow  / 2
+
+                        if (this.scene.enemy.health > 0) this.scene.enemy.anims.play('enemy1_hurt', true)
+                        else {
+                            this.scene.active = false
+                            this.scene.enemy.anims.play('enemy1_death', true)
+
+                            // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
+                            setTimeout(() => {
+                                this.scene.enemy.destroy()
+                            }, 500) 
+                        }
+
+                        if (!this.scene.gain_life_sound.isPlaying) this.scene.gain_life_sound.play()
+                        this.health += 10
+                        
+                    }
+                }
+            }
+            this.pressedV = true
+        }
+        
         if (this.inputKeys.Q.isUp) this.pressedQ = false
         if (this.inputKeys.up.isUp) this.pressedUp = false
         if (this.inputKeys.down.isUp) this.pressedDown = false
@@ -215,10 +338,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.inputKeys.R.isUp) this.pressedR = false
         if (this.inputKeys.F.isUp) this.pressedF = false
         if (this.inputKeys.P.isUp) this.pressedP = false
+        if (this.inputKeys.C.isUp) this.pressedC = false
+        if (this.inputKeys.V.isUp) this.pressedV = false
         if (this.inputKeys.SPACE.isUp) this.pressedSPACE = false
 
     }
-
-
 
 }
