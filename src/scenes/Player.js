@@ -300,8 +300,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Share
         if (this.inputKeys.V.isDown) {
 
-            if (!this.scene.steal_sound.isPlaying) this.scene.steal_sound.play()
-
             if (!this.pressedV) {
 
                 if (this.scene.enemy.active) {
@@ -313,6 +311,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                         (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y - 32)){
 
                         this.anims.play('elf_share', true)
+                        if (!this.scene.steal_sound.isPlaying) this.scene.steal_sound.play()
+
 
                         const healthPlayerNow = this.health
                         const healthEnemyNow = this.scene.enemy.health

@@ -489,8 +489,8 @@ export default class Game extends Phaser.Scene {
         this.buttonLabel.setX(this.player.x - 300)
         this.buttonLabel.setY(this.player.y - 230)
 
+        // ----------------------------------------------------- LOG CHAT
 
-        // ----------------------------------------------------- Log Chat
         this.LogChat1 = this.add.text(0, 0, '', {fontSize:'12px' })
         this.LogChat1.setFill('#241A0B');
         this.LogChat1.setX(this.healthLabel.x - 320)
@@ -544,7 +544,7 @@ export default class Game extends Phaser.Scene {
         this.healthLabel.setY(this.player.y + 150);
 
         this.logChatImage.setX(this.player.x - 230)
-        this.logChatImage.setY(this.player.y +175)
+        this.logChatImage.setY(this.player.y + 175)
 
         // ----------------------------------------------------- UPDATE BUTTONS
 
@@ -558,7 +558,7 @@ export default class Game extends Phaser.Scene {
         this.button_save.y = this.player.y + 200
 
         this.button_share.x = this.player.x
-        this.button_share.y = this.player.y + 215
+        this.button_share.y = this.player.y + 200
 
         this.button_fight.x = this.player.x + 30
         this.button_fight.y = this.player.y + 200
@@ -576,6 +576,7 @@ export default class Game extends Phaser.Scene {
         this.buttonLabel.setY(this.player.y - 230)
 
         // ----------------------------------------------------- UPDATE LOG CHAT
+
         if(this.player.logArray != null){
 			for(let i = 0; i <4 ; i++ ){
 				if(i == 0){
@@ -605,10 +606,6 @@ export default class Game extends Phaser.Scene {
 		}else{
 			console.log('null');
 		}
-        
-
-        
-
 
     }
 
@@ -870,10 +867,6 @@ export default class Game extends Phaser.Scene {
 
     shareOnClick() {
 
-        this.player.anims.play('elf_share', true)
-
-        if (!this.steal_sound.isPlaying) this.steal_sound.play()
-
         if (this.enemy.active) {
 
             // Steal in 4 directions: left, right, up, down
@@ -881,6 +874,9 @@ export default class Game extends Phaser.Scene {
                 (this.enemy.x == this.player.x + 32 && this.enemy.y == this.player.y) ||
                 (this.enemy.x == this.player.x && this.enemy.y == this.player.y + 32) ||
                 (this.enemy.x == this.player.x && this.enemy.y == this.player.y - 32)){
+
+                this.player.anims.play('elf_share', true)
+                if (!this.steal_sound.isPlaying) this.steal_sound.play()
 
                 if (!this.gain_life_sound.isPlaying) this.gain_life_sound.play()
 
