@@ -32,10 +32,14 @@ export default class Game extends Phaser.Scene {
         // ----------------------------------------------------- ASSETS 
 
         this.load.image('vision', 'src/assets/particles/fog.png')
-        this.load.image('greenHealthBar', 'src/assets/healthBar/green_health_bar.png')
-        this.load.image('redHealthBar', 'src/assets/healthBar/red_health_bar.png')
+        //this.load.image('greenHealthBar', 'src/assets/healthBar/green_health_bar.png')
+        //this.load.image('redHealthBar', 'src/assets/healthBar/red_health_bar.png')
         this.load.audio('music', 'src/assets/audio/music1.mp3')
         this.load.audio('loseGame', 'src/assets/audio/loseGame.wav')
+        this.load.image('logChat', 'src/assets/LogChat/logchat.png')
+        
+        this.load.image('greenHealthBar', 'src/assets/healthBar/topBar.png')
+        this.load.image('redHealthBar', 'src/assets/healthBar/backgroundBar.png')
 
         // ----------------------------------------------------- BUTTONS
 
@@ -254,7 +258,7 @@ export default class Game extends Phaser.Scene {
         }, true)
         rt.fill(0x000000, 1)
         rt.draw(this.layer)
-        rt.setTint(0x0a2948)
+        rt.setTint(0x241A0B )
 
         const vision = this.make.image({
             x: this.player.x,
@@ -286,21 +290,26 @@ export default class Game extends Phaser.Scene {
         this.healthBar.fixedToCamera = true;
         this.healthBarWidth = this.healthBar.width;
 
+        this.logChatImage = this.add.image(this.player.x - 200, this.player.y +180, 'logChat');
+        this.logChatImage.fixedToCamera = true;
+
 
         WebFont.load({
             google: {
-                families: [ 'VT323' ]
+                families: [ 'VT323'  ]
             }});
 
 
         // add text label to left of bar
-        this.healthLabel = this.add.text(60, 12, 'Health', {fontFamily: 'VT323', fontSize:'20px', fill:'#ffffff'});
+        this.healthLabel = this.add.text(60, 12, 'Health', { fontSize:'20px', fill:'#ffffff'});
         this.healthLabel.fixedToCamera = true;
 
-        // ----------------------------------------------------- XP
+        
+
+        // ----------------------------------------------------- XP                             
 
         this.player.xp = 0
-        this.xpLabel = this.add.text(0, 0, 'XP ' + this.player.xp, {fontFamily: 'VT323', })
+        this.xpLabel = this.add.text(0, 0, 'XP ' + this.player.xp, { })
         this.xpLabel.setX(this.healthLabel.x + 200)
         this.xpLabel.setY(this.healthLabel.y)
 
@@ -357,19 +366,23 @@ export default class Game extends Phaser.Scene {
 
 
         // ----------------------------------------------------- Log Chat
-        this.LogChat1 = this.add.text(0, 0, '', {fontFamily: 'VT323', fontSize:'15px'})
+        this.LogChat1 = this.add.text(0, 0, '', {fontSize:'12px' })
+        this.LogChat1.setFill('#241A0B');
         this.LogChat1.setX(this.healthLabel.x - 320)
         this.LogChat1.setY(this.healthLabel.y + 200)
 
-        this.LogChat2 = this.add.text(0, 0, '', {fontFamily: 'VT323', fontSize:'15px'})
+        this.LogChat2 = this.add.text(0, 0, '', {fontSize:'12px'})
+        this.LogChat2.setFill('#241A0B');
         this.LogChat2.setX(this.healthLabel.x - 320)
         this.LogChat2.setY(this.healthLabel.y + 180)
 
-        this.LogChat3 = this.add.text(0, 0, '', {fontFamily: 'VT323', fontSize:'15px'})
+        this.LogChat3 = this.add.text(0, 0, '', { fontSize:'12px'})
+        this.LogChat3.setFill('#241A0B');
         this.LogChat3.setX(this.healthLabel.x - 320)
         this.LogChat3.setY(this.healthLabel.y + 160)
 
-        this.LogChat4 = this.add.text(0, 0, '', {fontFamily: 'VT323', fontSize:'15px'})
+        this.LogChat4 = this.add.text(0, 0, '', {fontSize:'12px'})
+        this.LogChat4.setFill('#241A0B');
         this.LogChat4.setX(this.healthLabel.x - 320)
         this.LogChat4.setY(this.healthLabel.y + 140)
 
@@ -404,27 +417,30 @@ export default class Game extends Phaser.Scene {
         this.healthLabel.setX(this.player.x - 25);
         this.healthLabel.setY(this.player.y + 150);
 
+        this.logChatImage.setX(this.player.x - 230)
+        this.logChatImage.setY(this.player.y +175)
+
         // ----------------------------------------------------- UPDATE BUTTONS
 
-        this.button_harvest.x = this.player.x - 150
+        this.button_harvest.x = this.player.x - 90
         this.button_harvest.y = this.player.y + 200
 
-        this.button_sow.x = this.player.x - 100
+        this.button_sow.x = this.player.x - 60
         this.button_sow.y = this.player.y + 200
 
-        this.button_save.x = this.player.x - 50
+        this.button_save.x = this.player.x - 30
         this.button_save.y = this.player.y + 200
 
         this.button_share.x = this.player.x
         this.button_share.y = this.player.y + 200
 
-        this.button_fight.x = this.player.x + 50
+        this.button_fight.x = this.player.x + 30
         this.button_fight.y = this.player.y + 200
 
-        this.button_steal.x = this.player.x + 100
+        this.button_steal.x = this.player.x + 60
         this.button_steal.y = this.player.y + 200
 
-        this.button_flee.x = this.player.x + 150
+        this.button_flee.x = this.player.x + 90
         this.button_flee.y = this.player.y + 200
 
         this.xpLabel.setX(this.healthLabel.x + 140)
@@ -436,24 +452,24 @@ export default class Game extends Phaser.Scene {
 				if(i == 0){
 					this.LogChat1.text = this.player.logArray[this.player.logArray.length -1 ]
                     this.LogChat1.setX(this.player.x -270)
-                    this.LogChat1.setY(this.player.y + 180)
+                    this.LogChat1.setY(this.player.y + 190)
 				}
 				else if(i == 1 ){
 					this.LogChat2.text = this.player.logArray[this.player.logArray.length -2 ]
                     this.LogChat2.setX(this.player.x-270)
-                    this.LogChat2.setY(this.player.y+ 160)
+                    this.LogChat2.setY(this.player.y+ 175)
                 
 				}				
 				else if(i == 2){
 					this.LogChat3.text = this.player.logArray[this.player.logArray.length -3 ]
                     this.LogChat3.setX(this.player.x-270)
-                    this.LogChat3.setY(this.player.y+ 140)
+                    this.LogChat3.setY(this.player.y+ 160)
 
 				}
 				if(i == 3){
 					this.LogChat4.text = this.player.logArray[this.player.logArray.length -4 ]
                     this.LogChat4.setX(this.player.x-270)
-                    this.LogChat4.setY(this.player.y+ 120)
+                    this.LogChat4.setY(this.player.y+ 145)
 
 				}
 			}
