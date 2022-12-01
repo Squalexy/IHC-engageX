@@ -40,6 +40,9 @@ export default class Game extends Phaser.Scene {
         
         this.load.image('greenHealthBar', 'src/assets/healthBar/topBar.png')
         this.load.image('redHealthBar', 'src/assets/healthBar/backgroundBar.png')
+        
+        this.load.image('topHealthBarEnemy', 'src/assets/healthBar/HealthBarEnemy.png')
+        this.load.image('botHealthBarEnemy', 'src/assets/healthBar/HealthBarEnemyBackground.png')
 
         // ----------------------------------------------------- SOUND EFFECTS
 
@@ -379,6 +382,15 @@ export default class Game extends Phaser.Scene {
         this.healthBar.fixedToCamera = true;
         this.healthBarWidth = this.healthBar.width;
 
+        // change position if needed (but use same position for both images)
+        this.backgroundBarEnemy = this.add.image(this.player.x + 300, 38, 'botHealthBarEnemy');
+        this.backgroundBarEnemy.fixedToCamera = true;
+
+        this.healthBarEnemy = this.add.image(this.player.x + 300, 38, 'topHealthBarEnemy');
+
+        this.healthBarEnemy.fixedToCamera = true;
+        this.healthBarEnemyWidth = this.healthBarEnemy.width;
+
         this.logChatImage = this.add.image(this.player.x - 200, this.player.y +180, 'logChat');
         this.logChatImage.fixedToCamera = true;
 
@@ -400,6 +412,8 @@ export default class Game extends Phaser.Scene {
         this.xpLabel = this.add.text(0, 0, 'XP ' + this.player.xp, { })
         this.xpLabel.setX(this.healthLabel.x + 200)
         this.xpLabel.setY(this.healthLabel.y)
+
+ 
 
         // ----------------------------------------------------- MUSIC & SOUND
 
@@ -524,7 +538,7 @@ export default class Game extends Phaser.Scene {
         // ----------------------------------------------------- UPDATE PLAYER AND ENEMY
 
         this.player.update()
-        if (this.enemy.active) this.enemy.update() // this.enemy.active -> verifies if enemy is alive
+        if (this.enemy.active) this.enemy.update(this.countdown.seconds, this.player) // this.enemy.active -> verifies if enemy is alive
 
         // ----------------------------------------------------- UPDATE COUNTDOWN
 
@@ -534,6 +548,9 @@ export default class Game extends Phaser.Scene {
 
         this.healthBar.displayWidth = this.player.health / this.player.maxHealth * this.healthBarWidth;
 
+        this.healthBarEnemy.displayWidth = this.enemy.health / this.enemy.maxHealth * this.healthBarEnemyWidth;
+
+        // Player
         this.healthBar.setX(this.player.x  - (1 - this.player.health / this.player.maxHealth)/2 * this.healthBarWidth);
         this.healthBar.setY(this.player.y + 160);
 
@@ -543,8 +560,15 @@ export default class Game extends Phaser.Scene {
         this.healthLabel.setX(this.player.x - 25);
         this.healthLabel.setY(this.player.y + 150);
 
-        this.logChatImage.setX(this.player.x - 230)
-        this.logChatImage.setY(this.player.y + 175)
+
+        // Enemy
+        this.healthBarEnemy.setX(this.enemy.x  - (1 - this.enemy.health / this.enemy.maxHealth)/2 * this.healthBarEnemyWidth);
+        this.healthBarEnemy.setY(this.enemy.y -20);
+
+        this.backgroundBarEnemy.setX(this.enemy.x);
+        this.backgroundBarEnemy.setY(this.enemy.y -20);
+
+
 
         // ----------------------------------------------------- UPDATE BUTTONS
 
@@ -576,7 +600,10 @@ export default class Game extends Phaser.Scene {
         this.buttonLabel.setY(this.player.y - 230)
 
         // ----------------------------------------------------- UPDATE LOG CHAT
-
+       
+        this.logChatImage.setX(this.player.x - 230)
+        this.logChatImage.setY(this.player.y + 175)
+        
         if(this.player.logArray != null){
 			for(let i = 0; i <4 ; i++ ){
 				if(i == 0){
@@ -606,6 +633,12 @@ export default class Game extends Phaser.Scene {
 		}else{
 			console.log('null');
 		}
+
+        if(this.enemy.health <= 0){
+            this.healthBarEnemy.destroy()
+            this.backgroundBarEnemy.destroy()
+
+        }
 
     }
 
@@ -868,8 +901,6 @@ export default class Game extends Phaser.Scene {
                 }
             }
         }
-
-
     }
 
     shareOnClick() {

@@ -32,7 +32,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     }
 
-    update(scene) {
+    update() {
 
         const obstacles = [17, 18, 19, 20, 21, 25, 26, 27, 28, 29, 30, 31]
         const cannot_sow = [17, 18, 19, 20, 21, 25, 26, 27, 28, 29, 30, 31, 32]
@@ -342,7 +342,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                         }
 
                         if (!this.scene.gain_life_sound.isPlaying) this.scene.gain_life_sound.play()
-                        this.health += 10
                         
                     }
                 }
