@@ -603,7 +603,7 @@ export default class Game extends Phaser.Scene {
        
         this.logChatImage.setX(this.player.x - 230)
         this.logChatImage.setY(this.player.y + 175)
-        
+
         if(this.player.logArray != null){
 			for(let i = 0; i <4 ; i++ ){
 				if(i == 0){

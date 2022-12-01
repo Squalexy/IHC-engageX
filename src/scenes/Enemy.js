@@ -34,6 +34,10 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     update(gameTime, player) {
 
+        const tiles = this.getTilesEnemy()
+        const obstacles = [17, 18, 19, 20, 21, 25, 26, 27, 28, 29, 30, 31]
+        const cannot_sow = [17, 18, 19, 20, 21, 25, 26, 27, 28, 29, 30, 31, 32]
+
         if (!this.anims.isPlaying && this.active) this.anims.play('enemy1_idle', true) // "!this.anims.isPlaying" is to not overlap the idle animation on another one
 
 
@@ -45,7 +49,6 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             if(this.gameDuration - gameTime >= 1){
                 this.gameDuration = gameTime
 
-                const cannot_sow = [17, 18, 19, 20, 21, 25, 26, 27, 28, 29, 30, 31, 32]
 
 
                 const min = Math.ceil(1)
@@ -177,35 +180,52 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
                         // Left
                         this.anims.play('enemy1_idle', true)
 
+                        console.log("ENEMY (LEFT tiles): " + tiles[0]["value"].index)
+
+                        if (!obstacles.includes(tiles[0]["value"].index)) {
+
                             player.logArray.push('Enemy Moved');
                             this.x -= 32
                             this.scaleX = -1
                             this.body.offset.x = 32
                             this.orientation = "left"
+                        }
                         
                     }else if(player.x > this.x){
                         // Right
                         this.anims.play('enemy1_idle', true)
+                        console.log("ENEMY (RIGHT tiles): " + tiles[1]["value"].index)
 
+                        if (!obstacles.includes(tiles[1]["value"].index)) {
+                            
                             player.logArray.push('Enemy Moved');
                             this.x += 32
                             this.body.offset.x = 0
                             this.scaleX = 1
                             this.orientation = "right"
-                        
+                        }
                     }else{
                         if(player.y > this.y){
                             //  Down
                             this.anims.play('enemy1_idle', true)
+
+                            console.log("ENEMY (DOWN tiles): " + tiles[2]["value"].index)
+
+                            if (!obstacles.includes(tiles[2]["value"].index)) {
                                 player.logArray.push('Enemy Moved');
                                 this.y += 32
+                            }
                             
                         }else{
                             //  Up
                             this.anims.play('enemy1_idle', true)
-    
+
+                            console.log("ENEMY (UP tiles): " + tiles[3]["value"].index)
+
+                            if(!obstacles.includes(tiles[3]["value"].index)){
                                 player.logArray.push('Enemy Moved');
                                 this.y -= 32
+                            }
                             
                         }
                     }
@@ -252,6 +272,68 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
                 }
             }
         }
+    }
+
+
+    getTilesEnemy() {
+
+        let tiles = [{
+                name: 'tileLeft',
+                value: this.scene.layer.getTileAtWorldXY(this.x - 32, this.y, true),
+                x: -32,
+                y: 0
+            },
+            {
+                name: 'tileRight',
+                value: this.scene.layer.getTileAtWorldXY(this.x + 32, this.y, true),
+                x: 32,
+                y: 0
+            },
+            {
+                name: 'tileDown',
+                value: this.scene.layer.getTileAtWorldXY(this.x, this.y + 32, true),
+                x: 0,
+                y: 32
+            },
+            {
+                name: 'tileUp',
+                value: this.scene.layer.getTileAtWorldXY(this.x, this.y - 32, true),
+                x: 0,
+                y: -32
+            },
+            {
+                name: 'tileUpLeft',
+                value: this.scene.layer.getTileAtWorldXY(this.x - 32, this.y - 32, true),
+                x: -32,
+                y: -32
+            },
+            {
+                name: 'tileUpRight',
+                value: this.scene.layer.getTileAtWorldXY(this.x + 32, this.y - 32, true),
+                x: 32,
+                y: -32
+            },
+            {
+                name: 'tileDownLeft',
+                value: this.scene.layer.getTileAtWorldXY(this.x - 32, this.y + 32, true),
+                x: -32,
+                y: 32
+            },
+            {
+                name: 'tileDownRight',
+                value: this.scene.layer.getTileAtWorldXY(this.x + 32, this.y + 32, true),
+                x: 32,
+                y: 32
+            },
+            {
+                name: 'tileCenter',
+                value: this.scene.layer.getTileAtWorldXY(this.x, this.y, true),
+                x: 0,
+                y: 0
+            },
+        ]
+
+        return tiles
     }
 
 

@@ -72,7 +72,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 this.vision.x += 32
                 this.pressedRight = true
                 this.orientation = "right"
-                console.log("Index: " + this.scene.tiles[1]["value"].index)
+                //console.log("Index RIGHT: " + this.scene.tiles[1]["value"].index)
             }
         }
 
