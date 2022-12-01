@@ -7,7 +7,7 @@ export default class Game extends Phaser.Scene {
 
     /** @type {CountdownController} */
     countdown
-
+    flag = true
     constructor() {
         super('game')
     }
@@ -63,6 +63,10 @@ export default class Game extends Phaser.Scene {
         this.load.image('button_fight', 'src/assets/buttons/Fight.png')
         this.load.image('button_steal', 'src/assets/buttons/Steal.png')
         this.load.image('button_flee', 'src/assets/buttons/Flee.png')
+        this.load.image('playButton1', 'src/assets/Menus/play1.png');
+        this.load.image('backButton1', 'src/assets/Menus/back.png');
+        this.load.image('playerIcon', 'src/assets/Overlay/boneco.png');
+
 
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
 
@@ -111,203 +115,119 @@ export default class Game extends Phaser.Scene {
 
         this.anims.create({
             key: 'elf_fight',
-            frames: this.anims.generateFrameNumbers('final_elf', {
-                start: 42,
-                end: 43
-            }),
+            frames: this.anims.generateFrameNumbers('final_elf', {start: 42,end: 43}),
             repeat: 0,
             frameRate: 10
         })
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 49,
-            end: 50
-        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 49,end: 50}))
 
         this.anims.create({
             key: 'elf_flee',
-            frames: this.anims.generateFrameNumbers('final_elf', {
-                start: 44,
-                end: 45
-            }),
+            frames: this.anims.generateFrameNumbers('final_elf', {start: 44,end: 45}),
             repeat: 0,
             frameRate: 10
         })
 
         this.anims.create({
             key: 'elf_harvest',
-            frames: this.anims.generateFrameNumbers('final_elf', {
-                start: 21,
-                end: 23
-            }),
+            frames: this.anims.generateFrameNumbers('final_elf', {start: 21,end: 23}),
             repeat: 0,
             frameRate: 10
         })
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 28,
-            end: 30
-        }))
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 35,
-            end: 35
-        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 28,end: 30}))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 35,end: 35}))
 
         this.anims.create({
             key: 'elf_share',
-            frames: this.anims.generateFrameNumbers('final_elf', {
-                start: 21,
-                end: 23
-            }),
+            frames: this.anims.generateFrameNumbers('final_elf', {start: 21,end: 23}),
             repeat: 0,
             frameRate: 10
         })
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 28,
-            end: 30
-        }))
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 35,
-            end: 35
-        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 28, end: 30}))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 35,end: 35}))
 
         this.anims.create({
             key: 'elf_idle',
-            frames: this.anims.generateFrameNumbers('final_elf', {
-                start: 51,
-                end: 52
-            }),
+            frames: this.anims.generateFrameNumbers('final_elf', {start: 51,end: 52}),
             repeat: -1,
             frameRate: 5
         })
 
         this.anims.create({
             key: 'elf_save',
-            frames: this.anims.generateFrameNumbers('final_elf', {
-                start: 24,
-                end: 26
-            }),
+            frames: this.anims.generateFrameNumbers('final_elf', {start: 24,end: 26}),
             repeat: 0,
             frameRate: 10
         })
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 31,
-            end: 33
-        }))
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 38,
-            end: 39
-        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 31,end: 33}))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 38,end: 39}))
 
         this.anims.create({
             key: 'elf_sow',
-            frames: this.anims.generateFrameNumbers('final_elf', {
-                start: 4,
-                end: 6
-            }),
+            frames: this.anims.generateFrameNumbers('final_elf', {start: 4,end: 6}),
             repeat: 0,
             frameRate: 10
         })
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 11,
-            end: 13
-        }))
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 18,
-            end: 18
-        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 11, end: 13}))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 18,end: 18}))
 
         this.anims.create({
             key: 'elf_steal',
-            frames: this.anims.generateFrameNumbers('final_elf', {
-                start: 0,
-                end: 4
-            }),
+            frames: this.anims.generateFrameNumbers('final_elf', {start: 0,end: 4 }),
             repeat: 0,
             frameRate: 8
         })
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 7,
-            end: 9
-        }))
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 14,
-            end: 16
-        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 7,end: 9}))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 14,end: 16}))
 
         this.anims.create({
             key: 'elf_walking',
-            frames: this.anims.generateFrameNumbers('final_elf', {
-                start: 46,
-                end: 47
-            }),
+            frames: this.anims.generateFrameNumbers('final_elf', {start: 46,end: 47}),
             repeat: 0,
             frameRate: 10
         })
-        .addFrame(this.anims.generateFrameNames('final_elf', {
-            start: 53,
-            end: 54
-        }))
+        .addFrame(this.anims.generateFrameNames('final_elf', {start: 53, end: 54}))
 
         // ------------------------------------ ENEMY
 
         this.anims.create({
             key: 'enemy1_death',
-            frames: this.anims.generateFrameNumbers('enemy1', {
-                start: 0,
-                end: 7
-            }),
+            frames: this.anims.generateFrameNumbers('enemy1', {start: 0,end: 7}),
             repeat: 0,
             frameRate: 10
-        }).addFrame(this.anims.generateFrameNames('enemy1', {
-            start: 14,
-            end: 14
-        }))
+        }).addFrame(this.anims.generateFrameNames('enemy1', { start: 14,end: 14 }))
 
         this.anims.create({
             key: 'enemy1_empty',
-            frames: this.anims.generateFrameNumbers('enemy1', {
-                start: 14,
-                end: 14
-            }),
+            frames: this.anims.generateFrameNumbers('enemy1', {start: 14,end: 14 }),
             repeat: 0,
             frameRate: 10
         })
 
         this.anims.create({
             key: 'enemy1_walk',
-            frames: this.anims.generateFrameNumbers('enemy1', {
-                start: 8,
-                end: 13
-            }),
+            frames: this.anims.generateFrameNumbers('enemy1', {start: 8,end: 13}),
             repeat: 0,
             frameRate: 10
         })
 
         this.anims.create({
             key: 'enemy1_attack',
-            frames: this.anims.generateFrameNumbers('enemy1', {
-                start: 16,
-                end: 19
-            }),
+            frames: this.anims.generateFrameNumbers('enemy1', {start: 16,end: 19}),
             repeat: 0,
             frameRate: 10
         })
 
         this.anims.create({
             key: 'enemy1_hurt',
-            frames: this.anims.generateFrameNumbers('enemy1', {
-                start: 20,
-                end: 23
-            }),
+            frames: this.anims.generateFrameNumbers('enemy1', {start: 20,end: 23 }),
             repeat: 0,
             frameRate: 10
         })
 
         this.anims.create({
             key: 'enemy1_idle',
-            frames: this.anims.generateFrameNumbers('enemy1', {
-                start: 24,
-                end: 27,
-            }),
+            frames: this.anims.generateFrameNumbers('enemy1', {start: 24,end: 27,}),
             repeat: -1,
             frameRate: 10
         })
@@ -368,8 +288,9 @@ export default class Game extends Phaser.Scene {
 
         this.countdown = new CountdownController(this, timerLabel)
         this.countdown.start(this.handleCountdownFinished.bind(this))
-
+        
         // ----------------------------------------------------- HEALTH BAR
+        this.playerIcon = this.add.image(this.player.x + 300, 18, 'playerIcon');
 
         // change position if needed (but use same position for both images)
         this.backgroundBar = this.add.image(this.player.x + 300, 18, 'redHealthBar');
@@ -515,119 +436,128 @@ export default class Game extends Phaser.Scene {
 
     update() {
 
-        this.tiles = this.getTiles()
+        if(this.flag){
+            this.tiles = this.getTiles()
 
-        // ----------------------------------------------------- PLAYERS DYING UPDATE
+            // ----------------------------------------------------- PLAYERS DYING UPDATE
+    
+            if (this.player.health <= 0) this.handleLifeFinished()
+    
+            // ----------------------------------------------------- UPDATE PLAYER AND ENEMY
+    
+            this.player.update()
+            if (this.enemy.active) this.enemy.update() // this.enemy.active -> verifies if enemy is alive
+    
+            // ----------------------------------------------------- UPDATE COUNTDOWN
+    
+            this.countdown.update(this.player, this.enemy, this.LogChat1, this.LogChat2, this.LogChat3, this.LogChat4)
+    
+            // ----------------------------------------------------- UPDATE HEALTH BAR
+    
+            this.healthBar.displayWidth = this.player.health / this.player.maxHealth * this.healthBarWidth;
+    
+            this.healthBar.setX(this.player.x - 60  - (1 - this.player.health / this.player.maxHealth)/2 * this.healthBarWidth);
+            this.healthBar.setY(this.player.y + 160);
+    
+            this.backgroundBar.setX(this.player.x- 60);
+            this.backgroundBar.setY(this.player.y + 160);
+    
+            this.healthLabel.setX(this.player.x - 85);
+            this.healthLabel.setY(this.player.y + 150);
+    
+            this.logChatImage.setX(this.player.x + 190)
+            this.logChatImage.setY(this.player.y + 175)
+    
+            // ----------------------------------------------------- UPDATE BUTTONS
+            this.playerIcon.setX(this.player.x - 220)
+            this.playerIcon.setY(this.player.y + 180)
+            this.playerIcon.setScale(1.3)
 
-        if (this.player.health <= 0) this.handleLifeFinished()
-
-        // ----------------------------------------------------- UPDATE PLAYER AND ENEMY
-
-        this.player.update()
-        if (this.enemy.active) this.enemy.update() // this.enemy.active -> verifies if enemy is alive
-
-        // ----------------------------------------------------- UPDATE COUNTDOWN
-
-        this.countdown.update(this.player, this.enemy, this.LogChat1, this.LogChat2, this.LogChat3, this.LogChat4)
-
-        // ----------------------------------------------------- UPDATE HEALTH BAR
-
-        this.healthBar.displayWidth = this.player.health / this.player.maxHealth * this.healthBarWidth;
-
-        this.healthBar.setX(this.player.x  - (1 - this.player.health / this.player.maxHealth)/2 * this.healthBarWidth);
-        this.healthBar.setY(this.player.y + 160);
-
-        this.backgroundBar.setX(this.player.x);
-        this.backgroundBar.setY(this.player.y + 160);
-
-        this.healthLabel.setX(this.player.x - 25);
-        this.healthLabel.setY(this.player.y + 150);
-
-        this.logChatImage.setX(this.player.x - 230)
-        this.logChatImage.setY(this.player.y + 175)
-
-        // ----------------------------------------------------- UPDATE BUTTONS
-
-        this.button_harvest.x = this.player.x - 90
-        this.button_harvest.y = this.player.y + 200
-
-        this.button_sow.x = this.player.x - 60
-        this.button_sow.y = this.player.y + 200
-
-        this.button_save.x = this.player.x - 30
-        this.button_save.y = this.player.y + 200
-
-        this.button_share.x = this.player.x
-        this.button_share.y = this.player.y + 200
-
-        this.button_fight.x = this.player.x + 30
-        this.button_fight.y = this.player.y + 200
-
-        this.button_steal.x = this.player.x + 60
-        this.button_steal.y = this.player.y + 200
-
-        this.button_flee.x = this.player.x + 90
-        this.button_flee.y = this.player.y + 200
-
-        this.xpLabel.setX(this.healthLabel.x + 140)
-        this.xpLabel.setY(this.healthLabel.y)
-        
-        this.buttonLabel.setX(this.player.x - 300)
-        this.buttonLabel.setY(this.player.y - 230)
-
-        // ----------------------------------------------------- UPDATE LOG CHAT
-
-        if(this.player.logArray != null){
-			for(let i = 0; i <4 ; i++ ){
-				if(i == 0){
-					this.LogChat1.text = this.player.logArray[this.player.logArray.length -1 ]
-                    this.LogChat1.setX(this.player.x -270)
-                    this.LogChat1.setY(this.player.y + 190)
-				}
-				else if(i == 1 ){
-					this.LogChat2.text = this.player.logArray[this.player.logArray.length -2 ]
-                    this.LogChat2.setX(this.player.x-270)
-                    this.LogChat2.setY(this.player.y+ 175)
-                
-				}				
-				else if(i == 2){
-					this.LogChat3.text = this.player.logArray[this.player.logArray.length -3 ]
-                    this.LogChat3.setX(this.player.x-270)
-                    this.LogChat3.setY(this.player.y+ 160)
-
-				}
-				if(i == 3){
-					this.LogChat4.text = this.player.logArray[this.player.logArray.length -4 ]
-                    this.LogChat4.setX(this.player.x-270)
-                    this.LogChat4.setY(this.player.y+ 145)
-
-				}
-			}
-		}else{
-			console.log('null');
-		}
+    
+            this.button_harvest.x = this.player.x - 150
+            this.button_harvest.y = this.player.y + 200
+    
+            this.button_sow.x = this.player.x - 120
+            this.button_sow.y = this.player.y + 200
+    
+            this.button_save.x = this.player.x - 90
+            this.button_save.y = this.player.y + 200
+    
+            this.button_share.x = this.player.x - 60
+            this.button_share.y = this.player.y + 200
+    
+            this.button_fight.x = this.player.x - 30
+            this.button_fight.y = this.player.y + 200
+    
+            this.button_steal.x = this.player.x 
+            this.button_steal.y = this.player.y + 200
+    
+            this.button_flee.x = this.player.x + 30
+            this.button_flee.y = this.player.y + 200
+    
+            this.xpLabel.setX(this.healthLabel.x + 140)
+            this.xpLabel.setY(this.healthLabel.y)
+            
+            this.buttonLabel.setX(this.player.x - 300)
+            this.buttonLabel.setY(this.player.y - 230)
+    
+            // ----------------------------------------------------- UPDATE LOG CHAT
+    
+            if(this.player.logArray != null){
+                for(let i = 0; i <4 ; i++ ){
+                    if(i == 0){
+                        this.LogChat1.text = this.player.logArray[this.player.logArray.length -1 ]
+                        this.LogChat1.setX(this.player.x + 180)
+                        this.LogChat1.setY(this.player.y + 190)
+                    }
+                    else if(i == 1 ){
+                        this.LogChat2.text = this.player.logArray[this.player.logArray.length -2 ]
+                        this.LogChat2.setX(this.player.x+ 180)
+                        this.LogChat2.setY(this.player.y+ 175)
+                    
+                    }				
+                    else if(i == 2){
+                        this.LogChat3.text = this.player.logArray[this.player.logArray.length -3 ]
+                        this.LogChat3.setX(this.player.x+ 180)
+                        this.LogChat3.setY(this.player.y+ 160)
+    
+                    }
+                    if(i == 3){
+                        this.LogChat4.text = this.player.logArray[this.player.logArray.length -4 ]
+                        this.LogChat4.setX(this.player.x+ 180)
+                        this.LogChat4.setY(this.player.y+ 145)
+    
+                    }
+                }
+            }else{
+                console.log('null');
+            }
+        }
+       
 
     }
 
     handleCountdownFinished() {
-
+        this.flag = false
         this.add.text(this.player.x, this.player.y - 180, 'GAME FINISHED!', {
             fontSize: 30
         }).setOrigin(0.5)
 
-        this.scene.pause()
 
         this.music.stop()
         this.loseGame = this.sound.add("loseGame", {
             volume: 0.4,
             loop: false
         });
-        //game.sound.setDecodedCallback(music, start, this);
         this.loseGame.play()
+
+
+
 
     }
 
     handleLifeFinished() {
+        this.flag = false
 
         this.add.text(this.player.x, this.player.y - 180, 'YOU DIED!', {
             fontSize: 30
@@ -636,69 +566,39 @@ export default class Game extends Phaser.Scene {
         this.music.stop()
         this.loseGame = this.sound.add("loseGame", {loop: false});
         this.loseGame.setVolume(0.15) 
-
-        //game.sound.setDecodedCallback(music, start, this);
         this.loseGame.play()
-        this.scene.pause()
-
     }
+
 
     getTiles() {
 
         let tiles = [{
                 name: 'tileLeft',
-                value: this.layer.getTileAtWorldXY(this.player.x - 32, this.player.y, true),
-                x: -32,
-                y: 0
-            },
+                value: this.layer.getTileAtWorldXY(this.player.x - 32, this.player.y, true),x: -32,y: 0},
             {
                 name: 'tileRight',
-                value: this.layer.getTileAtWorldXY(this.player.x + 32, this.player.y, true),
-                x: 32,
-                y: 0
-            },
+                value: this.layer.getTileAtWorldXY(this.player.x + 32, this.player.y, true),x: 32,y: 0},
             {
                 name: 'tileDown',
-                value: this.layer.getTileAtWorldXY(this.player.x, this.player.y + 32, true),
-                x: 0,
-                y: 32
-            },
+                value: this.layer.getTileAtWorldXY(this.player.x, this.player.y + 32, true),x: 0,y: 32},
             {
                 name: 'tileUp',
-                value: this.layer.getTileAtWorldXY(this.player.x, this.player.y - 32, true),
-                x: 0,
-                y: -32
-            },
+                value: this.layer.getTileAtWorldXY(this.player.x, this.player.y - 32, true),x: 0,y: -32},
             {
                 name: 'tileUpLeft',
-                value: this.layer.getTileAtWorldXY(this.player.x - 32, this.player.y - 32, true),
-                x: -32,
-                y: -32
-            },
+                value: this.layer.getTileAtWorldXY(this.player.x - 32, this.player.y - 32, true),x: -32,y: -32},
             {
                 name: 'tileUpRight',
-                value: this.layer.getTileAtWorldXY(this.player.x + 32, this.player.y - 32, true),
-                x: 32,
-                y: -32
-            },
+                value: this.layer.getTileAtWorldXY(this.player.x + 32, this.player.y - 32, true),x: 32,y: -32},
             {
                 name: 'tileDownLeft',
-                value: this.layer.getTileAtWorldXY(this.player.x - 32, this.player.y + 32, true),
-                x: -32,
-                y: 32
-            },
+                value: this.layer.getTileAtWorldXY(this.player.x - 32, this.player.y + 32, true),x: -32,y: 32},
             {
                 name: 'tileDownRight',
-                value: this.layer.getTileAtWorldXY(this.player.x + 32, this.player.y + 32, true),
-                x: 32,
-                y: 32
-            },
+                value: this.layer.getTileAtWorldXY(this.player.x + 32, this.player.y + 32, true),x: 32,y: 32},
             {
                 name: 'tileCenter',
-                value: this.layer.getTileAtWorldXY(this.player.x, this.player.y, true),
-                x: 0,
-                y: 0
-            },
+                value: this.layer.getTileAtWorldXY(this.player.x, this.player.y, true),x: 0,y: 0},
         ]
 
         return tiles

@@ -13,6 +13,7 @@ export default class CountdownController
 
 	duration = 0
 	GameDuration = 60000
+	seconds = 0
 
 	/**
 	 * 
@@ -68,7 +69,7 @@ export default class CountdownController
 
 		const elapsed = this.timerEvent.getElapsed()
 		const remaining = this.duration - elapsed
-		const seconds = remaining / 1000
+		this.seconds = remaining / 1000
         if(player.health - 0.05 > 0 && player.health - 0.05 < 100){
             player.health = player.health - 0.05;
         }else if(player.health - 0.05 < 0) {
@@ -86,7 +87,7 @@ export default class CountdownController
 		}
 		
 		
-		this.label.text = seconds.toFixed(2)
+		this.label.text = this.seconds.toFixed(2)
         this.label.setX(player.x);
         this.label.setY(player.y - 150);
 
