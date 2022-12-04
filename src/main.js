@@ -3,8 +3,6 @@ import Game from './scenes/Game.js'
 import HowToPlay from './scenes/HowToPlay.js'
 import IntroMenu from './scenes/IntroMenu.js'
 
-
-
 export default new Phaser.Game({
     type: Phaser.AUTO,
     scene: [IntroMenu, Game, HowToPlay],
