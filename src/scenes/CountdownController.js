@@ -70,9 +70,11 @@ export default class CountdownController
 		const elapsed = this.timerEvent.getElapsed()
 		const remaining = this.duration - elapsed
 		this.seconds = remaining / 1000
+
         if(player.health - 0.01 > 0 && player.health - 0.05 < 100){
             player.health = player.health - 0.01;
         }else if(player.health - 0.01 < 0) {
+
             player.health = 0;
         }else{
 			player.health = 100;

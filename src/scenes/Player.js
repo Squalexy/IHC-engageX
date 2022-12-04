@@ -176,9 +176,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                         (this.scene.enemy.x == this.x + 32 && this.scene.enemy.y == this.y) ||
                         (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y + 32) ||
                         (this.scene.enemy.x == this.x && this.scene.enemy.y == this.y - 32)){
-                            this.logArray.push('You used Fight');
-            
-
+                        this.logArray.push('You used Fight');
+                        
                         this.scene.enemy.health -= 10
                         if (this.scene.enemy.health > 0) this.scene.enemy.anims.play('enemy1_hurt', true)
                         else {
