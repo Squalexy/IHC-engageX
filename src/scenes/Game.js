@@ -40,9 +40,6 @@ export default class Game extends Phaser.Scene {
         
         this.load.image('greenHealthBar', 'src/assets/healthBar/topBar.png')
         this.load.image('redHealthBar', 'src/assets/healthBar/backgroundBar.png')
-        
-        this.load.image('topHealthBarEnemy', 'src/assets/healthBar/HealthBarEnemy.png')
-        this.load.image('botHealthBarEnemy', 'src/assets/healthBar/HealthBarEnemyBackground.png')
 
         // ----------------------------------------------------- SOUND EFFECTS
 
@@ -303,15 +300,6 @@ export default class Game extends Phaser.Scene {
         this.healthBar.fixedToCamera = true;
         this.healthBarWidth = this.healthBar.width;
 
-        // change position if needed (but use same position for both images)
-        this.backgroundBarEnemy = this.add.image(this.player.x + 300, 38, 'botHealthBarEnemy');
-        this.backgroundBarEnemy.fixedToCamera = true;
-
-        this.healthBarEnemy = this.add.image(this.player.x + 300, 38, 'topHealthBarEnemy');
-
-        this.healthBarEnemy.fixedToCamera = true;
-        this.healthBarEnemyWidth = this.healthBarEnemy.width;
-
         this.logChatImage = this.add.image(this.player.x - 200, this.player.y +180, 'logChat');
         this.logChatImage.fixedToCamera = true;
 
@@ -333,8 +321,6 @@ export default class Game extends Phaser.Scene {
         this.xpLabel = this.add.text(0, 0, 'XP ' + this.player.xp, { })
         this.xpLabel.setX(this.healthLabel.x + 200)
         this.xpLabel.setY(this.healthLabel.y)
-
- 
 
         // ----------------------------------------------------- MUSIC & SOUND
 
@@ -451,7 +437,6 @@ export default class Game extends Phaser.Scene {
     update() {
 
         if(this.flag){
-        
             this.tiles = this.getTiles()
 
             // ----------------------------------------------------- PLAYERS DYING UPDATE
@@ -468,39 +453,27 @@ export default class Game extends Phaser.Scene {
             this.countdown.update(this.player, this.enemy, this.LogChat1, this.LogChat2, this.LogChat3, this.LogChat4)
     
             // ----------------------------------------------------- UPDATE HEALTH BAR
-
+    
             this.healthBar.displayWidth = this.player.health / this.player.maxHealth * this.healthBarWidth;
-
-            this.healthBarEnemy.displayWidth = this.enemy.health / this.enemy.maxHealth * this.healthBarEnemyWidth;
-
-            // Player
-            this.healthBar.setX(this.player.x  - (1 - this.player.health / this.player.maxHealth)/2 * this.healthBarWidth);
+    
+            this.healthBar.setX(this.player.x - 60  - (1 - this.player.health / this.player.maxHealth)/2 * this.healthBarWidth);
             this.healthBar.setY(this.player.y + 160);
-
-            this.backgroundBar.setX(this.player.x);
+    
+            this.backgroundBar.setX(this.player.x- 60);
             this.backgroundBar.setY(this.player.y + 160);
-
-            this.healthLabel.setX(this.player.x - 25);
+    
+            this.healthLabel.setX(this.player.x - 85);
             this.healthLabel.setY(this.player.y + 150);
-
-
-            // Enemy
-            this.healthBarEnemy.setX(this.enemy.x  - (1 - this.enemy.health / this.enemy.maxHealth)/2 * this.healthBarEnemyWidth);
-            this.healthBarEnemy.setY(this.enemy.y -20);
-
-            this.backgroundBarEnemy.setX(this.enemy.x);
-            this.backgroundBarEnemy.setY(this.enemy.y -20);
+    
+            this.logChatImage.setX(this.player.x + 190)
+            this.logChatImage.setY(this.player.y + 175)
     
             // ----------------------------------------------------- UPDATE BUTTONS
             this.playerIcon.setX(this.player.x - 220)
             this.playerIcon.setY(this.player.y + 180)
             this.playerIcon.setScale(1.3)
 
-            // ----------------------------------------------------- UPDATE LOG CHAT
-       
-            this.logChatImage.setX(this.player.x - 230)
-            this.logChatImage.setY(this.player.y + 175)
-
+    
             this.button_harvest.x = this.player.x - 150
             this.button_harvest.y = this.player.y + 200
     
@@ -533,37 +506,34 @@ export default class Game extends Phaser.Scene {
             if(this.player.logArray != null){
                 for(let i = 0; i <4 ; i++ ){
                     if(i == 0){
-                      this.LogChat1.text = this.player.logArray[this.player.logArray.length -1 ]
-                                this.LogChat1.setX(this.player.x -270)
-                                this.LogChat1.setY(this.player.y + 190)
+                        this.LogChat1.text = this.player.logArray[this.player.logArray.length -1 ]
+                        this.LogChat1.setX(this.player.x + 180)
+                        this.LogChat1.setY(this.player.y + 190)
                     }
                     else if(i == 1 ){
-                      this.LogChat2.text = this.player.logArray[this.player.logArray.length -2 ]
-                                this.LogChat2.setX(this.player.x-270)
-                                this.LogChat2.setY(this.player.y+ 175)
+                        this.LogChat2.text = this.player.logArray[this.player.logArray.length -2 ]
+                        this.LogChat2.setX(this.player.x+ 180)
+                        this.LogChat2.setY(this.player.y+ 175)
+                    
                     }				
                     else if(i == 2){
-                      this.LogChat3.text = this.player.logArray[this.player.logArray.length -3 ]
-                                this.LogChat3.setX(this.player.x-270)
-                                this.LogChat3.setY(this.player.y+ 160)
+                        this.LogChat3.text = this.player.logArray[this.player.logArray.length -3 ]
+                        this.LogChat3.setX(this.player.x+ 180)
+                        this.LogChat3.setY(this.player.y+ 160)
+    
                     }
                     if(i == 3){
-                      this.LogChat4.text = this.player.logArray[this.player.logArray.length -4 ]
-                                this.LogChat4.setX(this.player.x-270)
-                                this.LogChat4.setY(this.player.y+ 145)
+                        this.LogChat4.text = this.player.logArray[this.player.logArray.length -4 ]
+                        this.LogChat4.setX(this.player.x+ 180)
+                        this.LogChat4.setY(this.player.y+ 145)
+    
                     }
                 }
             }else{
                 console.log('null');
             }
         }
-
-
-        if(this.enemy.health <= 0){
-            this.healthBarEnemy.destroy()
-            this.backgroundBarEnemy.destroy()
-
-        }
+       
 
     }
 
@@ -798,6 +768,8 @@ export default class Game extends Phaser.Scene {
                 }
             }
         }
+
+
     }
 
     shareOnClick() {

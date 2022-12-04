@@ -70,19 +70,17 @@ export default class CountdownController
 		const elapsed = this.timerEvent.getElapsed()
 		const remaining = this.duration - elapsed
 		this.seconds = remaining / 1000
-
-        if(player.health - 0.01 > 0 && player.health - 0.05 < 100){
-            player.health = player.health - 0.01;
-        }else if(player.health - 0.01 < 0) {
-
+        if(player.health - 0.05 > 0 && player.health - 0.05 < 100){
+            player.health = player.health - 0.05;
+        }else if(player.health - 0.05 < 0) {
             player.health = 0;
         }else{
 			player.health = 100;
 		}
 
-		if(enemy.health - 0.01 > 0 && enemy.health - 0.01 < 100){
-            enemy.health = enemy.health - 0.01;
-        }else if(enemy.health - 0.01 < 0) {
+		if(enemy.health - 0.05 > 0 && enemy.health - 0.05 < 100){
+            enemy.health = enemy.health - 0.05;
+        }else if(enemy.health - 0.05 < 0) {
             enemy.health = 0;
         }else{
 			enemy.health = 100;
@@ -91,6 +89,8 @@ export default class CountdownController
 		
 		this.label.text = this.seconds.toFixed(2)
         this.label.setX(player.x);
-        this.label.setY(player.y - 150);        
+        this.label.setY(player.y - 150);
+
+        
 	}
 }
