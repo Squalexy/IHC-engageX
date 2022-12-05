@@ -179,9 +179,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                         this.logArray.push('You used Fight');
                         
                         this.scene.enemy.health -= 10
-                        if (this.scene.enemy.health > 0) this.scene.enemy.anims.play('enemy1_hurt', true)
+                        if (this.scene.enemy.health > 0) {
+                            if (!this.scene.hurt_enemy_sound.isPlaying) this.scene.hurt_enemy_sound.play()
+                            this.scene.enemy.anims.play('enemy1_hurt', true)
+                        }
                         else {
                             this.scene.active = false
+                            if (!this.scene.enemy_dying_sound.isPlaying) this.scene.enemy_dying_sound.play()
                             this.scene.enemy.anims.play('enemy1_death', true)
 
                             // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite

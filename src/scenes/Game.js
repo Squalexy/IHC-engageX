@@ -56,6 +56,9 @@ export default class Game extends Phaser.Scene {
         this.load.audio('steal_sound', 'src/assets/audio/sfx/steal.wav')
         this.load.audio('walk_sound', 'src/assets/audio/sfx/walk.wav')
         this.load.audio('flee_sound', 'src/assets/audio/sfx/flee.wav')
+        this.load.audio('enemy_dying_sound', 'src/assets/audio/sfx/enemy_dying.wav')
+        this.load.audio('hurt_player_sound', 'src/assets/audio/sfx/hurt_player.wav')
+        this.load.audio('hurt_enemy_sound', 'src/assets/audio/sfx/hurt_enemy.wav')
 
         // ----------------------------------------------------- BUTTONS
 
@@ -258,6 +261,16 @@ export default class Game extends Phaser.Scene {
             V: Phaser.Input.Keyboard.KeyCodes.V,
         })
 
+        // ----------------------------------------------------- HEALTH BAR ENEMY
+
+        this.healthBarEnemy = this.add.image(this.player.x + 300, 38, 'topHealthBarEnemy');
+        this.healthBarEnemy.fixedToCamera = true;
+        this.healthBarEnemyWidth = this.healthBarEnemy.width;
+
+        // change position if needed (but use same position for both images)
+        this.backgroundBarEnemy = this.add.image(this.player.x + 300, 38, 'botHealthBarEnemy');
+        this.backgroundBarEnemy.fixedToCamera = true;
+
         // ----------------------------------------------------- DARK EFFECT 
 
         const width = this.scale.width * 2
@@ -292,7 +305,7 @@ export default class Game extends Phaser.Scene {
         this.countdown = new CountdownController(this, timerLabel)
         this.countdown.start(this.handleCountdownFinished.bind(this))
         
-        // ----------------------------------------------------- HEALTH BAR
+        // ----------------------------------------------------- HEALTH BAR PLAYER
         this.playerIcon = this.add.image(this.player.x + 300, 18, 'playerIcon');
 
         // change position if needed (but use same position for both images)
@@ -303,18 +316,8 @@ export default class Game extends Phaser.Scene {
         this.healthBar.fixedToCamera = true;
         this.healthBarWidth = this.healthBar.width;
 
-        // change position if needed (but use same position for both images)
-        this.backgroundBarEnemy = this.add.image(this.player.x + 300, 38, 'botHealthBarEnemy');
-        this.backgroundBarEnemy.fixedToCamera = true;
-
-        this.healthBarEnemy = this.add.image(this.player.x + 300, 38, 'topHealthBarEnemy');
-
-        this.healthBarEnemy.fixedToCamera = true;
-        this.healthBarEnemyWidth = this.healthBarEnemy.width;
-
         this.logChatImage = this.add.image(this.player.x - 200, this.player.y +180, 'logChat');
         this.logChatImage.fixedToCamera = true;
-
 
         WebFont.load({
             google: {
@@ -348,6 +351,9 @@ export default class Game extends Phaser.Scene {
         this.steal_sound = this.sound.add("steal_sound", { loop: false });
         this.walk_sound = this.sound.add("walk_sound", { loop: false })
         this.flee_sound = this.sound.add("flee_sound", { loop: false });
+        this.enemy_dying_sound = this.sound.add("enemy_dying_sound", { loop: false });
+        this.hurt_player_sound = this.sound.add("hurt_player_sound", { loop: false });
+        this.hurt_enemy_sound = this.sound.add("hurt_enemy_sound", { loop: false });
 
         this.music.setVolume(0.35)
         this.walk_sound.setVolume(4)
@@ -356,6 +362,8 @@ export default class Game extends Phaser.Scene {
         this.harvest_sound.setVolume(1.5)
         this.sow_sound.setVolume(1.5)
         this.save_sound.setVolume(1.5)
+        this.hurt_enemy_sound.setVolume(0.25)
+        this.hurt_player_sound.setVolume(1.5)
 
         // ----------------------------------------------------- BUTTONS CREATION 
 
@@ -526,24 +534,24 @@ export default class Game extends Phaser.Scene {
                 for(let i = 0; i <4 ; i++ ){
                     if(i == 0){
                         this.LogChat1.text = this.player.logArray[this.player.logArray.length -1 ]
-                        this.LogChat1.setX(this.player.x + 180)
+                        this.LogChat1.setX(this.player.x + 150)
                         this.LogChat1.setY(this.player.y + 190)
                     }
                     else if(i == 1 ){
                         this.LogChat2.text = this.player.logArray[this.player.logArray.length -2 ]
-                        this.LogChat2.setX(this.player.x+ 180)
+                        this.LogChat2.setX(this.player.x+ 150)
                         this.LogChat2.setY(this.player.y+ 175)
                     
                     }				
                     else if(i == 2){
                         this.LogChat3.text = this.player.logArray[this.player.logArray.length -3 ]
-                        this.LogChat3.setX(this.player.x+ 180)
+                        this.LogChat3.setX(this.player.x+ 150)
                         this.LogChat3.setY(this.player.y+ 160)
     
                     }
                     if(i == 3){
                         this.LogChat4.text = this.player.logArray[this.player.logArray.length -4 ]
-                        this.LogChat4.setX(this.player.x+ 180)
+                        this.LogChat4.setX(this.player.x+ 150)
                         this.LogChat4.setY(this.player.y+ 145)
     
                     }
@@ -681,9 +689,13 @@ export default class Game extends Phaser.Scene {
 
                 this.enemy.health -= 10
 
-                if (this.enemy.health > 0) this.enemy.anims.play('enemy1_hurt', true)
+                if (this.enemy.health > 0) {
+                    if (!this.hurt_enemy_sound.isPlaying) this.hurt_enemy_sound.play()
+                    this.enemy.anims.play('enemy1_hurt', true)
+                }
                 else {
                     this.active = false
+                    if (!this.enemy_dying_sound.isPlaying) this.enemy_dying_sound.play()
                     this.enemy.anims.play('enemy1_death', true)
                     // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
                     setTimeout(() => {
@@ -773,9 +785,13 @@ export default class Game extends Phaser.Scene {
 
                     this.enemy.health -= 10
 
-                    if (this.enemy.health > 0) this.enemy.anims.play('enemy1_hurt', true)
+                    if (this.enemy.health > 0) {
+                        if (!this.hurt_enemy_sound.isPlaying) this.hurt_enemy_sound.play()
+                        this.enemy.anims.play('enemy1_hurt', true)
+                    }
                     else {
                         this.active = false
+                        if (!this.enemy_dying_sound.isPlaying) this.enemy_dying_sound.play()
                         this.enemy.anims.play('enemy1_death', true)
 
                         // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite
@@ -819,9 +835,13 @@ export default class Game extends Phaser.Scene {
                 this.enemy.health -= healthEnemyNow / 2
                 this.enemy.health += healthPlayerNow  / 2
 
-                if (this.enemy.health > 0) this.enemy.anims.play('enemy1_hurt', true)
+                if (this.enemy.health > 0) {
+                    if (!this.hurt_enemy_sound.isPlaying) this.hurt_enemy_sound.play()
+                    this.enemy.anims.play('enemy1_hurt', true)
+                }
                 else {
                     this.active = false
+                    if (!this.enemy_dying_sound.isPlaying) this.enemy_dying_sound.play()
                     this.enemy.anims.play('enemy1_death', true)
 
                     // this timeout is EXTREMELY NECESSARY to wait for the animation to play fully and then destroy the sprite

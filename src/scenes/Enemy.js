@@ -38,7 +38,6 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         const tiles = this.getTilesEnemy()
         const obstacles = [17, 18, 19, 20, 21, 25, 26, 27, 28, 29, 30, 31]
-        const cannot_sow = [17, 18, 19, 20, 21, 25, 26, 27, 28, 29, 30, 31, 32]
 
         if (!this.anims.isPlaying && this.active) this.anims.play('enemy1_idle', true) // "!this.anims.isPlaying" is to not overlap the idle animation on another one
 
@@ -103,7 +102,12 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
                             player.logArray.push('Enemy used Fight');
 
                             player.health -= 10
-                            if (this.scene.player.health > 0) this.scene.player.anims.play('elf_steal', true)
+
+                            if (this.scene.player.health > 0) {
+                                if (!this.scene.hurt_player_sound.isPlaying) this.scene.hurt_player_sound.play()
+                                this.scene.player.anims.play('elf_steal', true)
+                            }
+
                             else {
                                 this.scene.active = false
                                 this.scene.player.anims.play('elf_steal', true)
@@ -124,20 +128,24 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
                         if (this.orientation == "left") {
                             let pos = this.scene.layer.getTileAtWorldXY(this.x - 32, this.y, true)
                             for (let i = 1; i < 6; i++) {
+                                if (obstacles.includes(pos.index)) break
+                                else {
                                     this.x -= 32
                                     this.body.offset.x = 32
                                     this.scaleX = -1
                                     pos = this.scene.layer.getTileAtWorldXY(this.x - 32, this.y, true)
-                                
+                                }
                             }
                         }else if (this.orientation == "right") {
                             let pos = this.scene.layer.getTileAtWorldXY(this.x + 32, this.y, true)
                             for (let i = 1; i < 6; i++) {
+                                if (obstacles.includes(pos.index)) break
+                                else {
                                     this.x += 32
                                     this.body.offset.x = 0
                                     this.scaleX = 1
                                     pos = this.scene.layer.getTileAtWorldXY(this.x + 32, this.y, true)
-                                
+                                }
                             }                
                         }
                     }
