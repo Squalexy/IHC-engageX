@@ -648,7 +648,7 @@ export default class Game extends Phaser.Scene {
             this.map.putTileAt(22, pointerTileX, pointerTileY)
 
             if (!this.gain_life_sound.isPlaying) this.gain_life_sound.play()
-            this.player.health += 15
+            this.player.health += 10
         }
     }
 
@@ -668,7 +668,7 @@ export default class Game extends Phaser.Scene {
                 let pointerTileX = this.map.worldToTileX(element["x"] + this.player.x)
                 let pointerTileY = this.map.worldToTileY(element["y"] + this.player.y)
                 this.map.putTileAt(24, pointerTileX, pointerTileY)
-                this.player.health -= 1
+                this.player.health -= 3
             }
         }
     }
@@ -714,6 +714,7 @@ export default class Game extends Phaser.Scene {
         this.player.anims.play('elf_flee', true)
         if (!this.flee_sound.isPlaying) this.flee_sound.play()
         this.player.logArray.push('You used Flee');
+        this.player.health -= 10;
 
         if (this.player.orientation == "left") {
 

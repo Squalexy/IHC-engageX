@@ -129,7 +129,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                         let pointerTileX = this.scene.map.worldToTileX(element["x"] + this.x)
                         let pointerTileY = this.scene.map.worldToTileY(element["y"] + this.y)
                         this.scene.map.putTileAt(24, pointerTileX, pointerTileY)
-                        this.health -= 1
+                        this.health -= 3
                     }
                 }
                 this.pressedE = true
@@ -156,7 +156,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                     this.scene.map.putTileAt(22, pointerTileX, pointerTileY)
 
                     if (!this.scene.gain_life_sound.isPlaying) this.scene.gain_life_sound.play()
-                    this.health += 15
+                    this.health += 10
                 }
             }
             this.pressedR = true
@@ -207,10 +207,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
             this.anims.play('elf_flee', true)
             if (!this.scene.flee_sound.isPlaying) this.scene.flee_sound.play()
-            this.logArray.push('You used Flee');
-
+           
             if (this.orientation == "left") {
                 if (!this.pressedSPACE) {
+                    this.logArray.push('You used Flee');
+                    this.health -= 10
                     let pos = this.scene.layer.getTileAtWorldXY(this.x - 32, this.y, true)
                     for (let i = 1; i < 6; i++) {
                         if (obstacles.includes(pos.index)) break
@@ -226,6 +227,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 }
             } else if (this.orientation == "right") {
                 if (!this.pressedSPACE) {
+                    this.logArray.push('You used Flee');
+                    this.health -= 10
                     let pos = this.scene.layer.getTileAtWorldXY(this.x + 32, this.y, true)
                     for (let i = 1; i < 6; i++) {
                         if (obstacles.includes(pos.index)) break

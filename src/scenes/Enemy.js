@@ -1,6 +1,6 @@
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
-    gameDuration = 60000
+    gameDuration = 120000
 
     constructor(data) {
         let {
@@ -124,7 +124,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
                         // Flee (maximum 5 tiles left or right)
                         this.anims.play('enemy1_idle', true)
                         player.logArray.push('Enemy used Flee');
-
+                        this.health -= 10;
                         if (this.orientation == "left") {
                             let pos = this.scene.layer.getTileAtWorldXY(this.x - 32, this.y, true)
                             for (let i = 1; i < 6; i++) {
