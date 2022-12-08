@@ -251,7 +251,7 @@ export default class Game extends Phaser.Scene {
             down: Phaser.Input.Keyboard.KeyCodes.S,
             left: Phaser.Input.Keyboard.KeyCodes.A,
             right: Phaser.Input.Keyboard.KeyCodes.D,
-            M: Phaser.Input.Keyboard.KeyCodes.Q,
+            M: Phaser.Input.Keyboard.KeyCodes.M,
             E: Phaser.Input.Keyboard.KeyCodes.E,
             R: Phaser.Input.Keyboard.KeyCodes.R,
             P: Phaser.Input.Keyboard.KeyCodes.P,
