@@ -107,8 +107,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         // Q for field of view effect
-        if (this.inputKeys.Q.isDown) {
-            if (!this.pressedQ) {
+        if (this.inputKeys.M.isDown) {
+            if (!this.pressedM) {
                 if (this.vision.scale == 0.4) this.vision.scale = 100
                 else this.vision.scale = 0.4
             }
@@ -356,7 +356,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.pressedV = true
         }
         
-        if (this.inputKeys.Q.isUp) this.pressedQ = false
+        if (this.inputKeys.M.isUp) this.pressedM = false
         if (this.inputKeys.up.isUp) this.pressedUp = false
         if (this.inputKeys.down.isUp) this.pressedDown = false
         if (this.inputKeys.left.isUp) this.pressedLeft = false

@@ -105,8 +105,8 @@ export default class Game extends Phaser.Scene {
 
         this.enemy = new Enemy({
             scene: this,
-            x: 32 * 5 + 16,
-            y: 32 * 5 + 16,
+            x: 32 * 15 + 16,
+            y: 32 * 15 + 16,
             texture: 'enemy1',
             frame: 'enemy1_idle'
         })
@@ -251,7 +251,7 @@ export default class Game extends Phaser.Scene {
             down: Phaser.Input.Keyboard.KeyCodes.S,
             left: Phaser.Input.Keyboard.KeyCodes.A,
             right: Phaser.Input.Keyboard.KeyCodes.D,
-            Q: Phaser.Input.Keyboard.KeyCodes.Q,
+            M: Phaser.Input.Keyboard.KeyCodes.Q,
             E: Phaser.Input.Keyboard.KeyCodes.E,
             R: Phaser.Input.Keyboard.KeyCodes.R,
             P: Phaser.Input.Keyboard.KeyCodes.P,
@@ -424,7 +424,7 @@ export default class Game extends Phaser.Scene {
         this.button_flee.on('pointerdown', function () {})
 
         this.buttonLabel = this.add.text(0, 0, 
-            '[W] Up\n[S] Down\n[A] Left\n[D] Right\n[Q] Dark effect\n[E] Sow\n[R] Harvest\n[P] Fight\n[C] Steal\n[V] Share\n[F] Save\n[SPACE] Flee', 
+            '[W] Up\n[S] Down\n[A] Left\n[D] Right\n[E] Sow\n[R] Harvest\n[P] Fight\n[C] Steal\n[V] Share\n[F] Save\n[SPACE] Flee', 
             {fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
             fontSize: 10})
         this.buttonLabel.setX(this.player.x - 300)
