@@ -668,7 +668,7 @@ export default class Game extends Phaser.Scene {
                 let pointerTileX = this.map.worldToTileX(element["x"] + this.player.x)
                 let pointerTileY = this.map.worldToTileY(element["y"] + this.player.y)
                 this.map.putTileAt(24, pointerTileX, pointerTileY)
-                this.player.health -= 1
+                this.player.health -= 2
             }
         }
     }
