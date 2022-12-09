@@ -129,7 +129,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                         let pointerTileX = this.scene.map.worldToTileX(element["x"] + this.x)
                         let pointerTileY = this.scene.map.worldToTileY(element["y"] + this.y)
                         this.scene.map.putTileAt(24, pointerTileX, pointerTileY)
-                        this.health -= 3
+                        this.health -= 1
                     }
                 }
                 this.pressedE = true

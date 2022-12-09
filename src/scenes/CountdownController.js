@@ -12,7 +12,7 @@ export default class CountdownController
     passedSeconds = 0
 
 	duration = 0
-	GameDuration = 120000
+	GameDuration = 180000
 	seconds = 0
 
 	/**

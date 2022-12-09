@@ -1,6 +1,6 @@
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
-    gameDuration = 120000
+    gameDuration = 180000
 
     constructor(data) {
         let {
